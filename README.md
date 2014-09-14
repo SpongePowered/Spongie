@@ -20,7 +20,7 @@ Running
 Contributing
 ------------
 
-Intake is available under the GNU Lesser General Public License.
+Eduardo is available under the GNU Lesser General Public License.
 
 We happily accept contributions, especially through pull requests on GitHub.
 
