@@ -94,6 +94,8 @@ public class Eduardo {
             injector.getInstance(Eduardo.class).load();
         } catch (LoaderException e) {
             log.error("Failed to load the application", e);
+        } catch (Exception e) {
+            log.error("Failed to load the application due to an unexpected error", e);
         }
     }
 
