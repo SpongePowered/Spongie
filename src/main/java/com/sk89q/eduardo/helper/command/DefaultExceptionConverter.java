@@ -17,26 +17,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.module;
+package com.sk89q.eduardo.helper.command;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.sk89q.eduardo.auth.Subject;
-import com.sk89q.eduardo.helper.Response;
-import com.sk89q.eduardo.helper.command.CommandProcessor;
-import com.sk89q.intake.Command;
+import com.sk89q.intake.CommandException;
+import com.sk89q.intake.parametric.handler.ExceptionConverterHelper;
+import com.sk89q.intake.parametric.handler.ExceptionMatch;
 
-@Singleton
-public class PermissionTest {
+public class DefaultExceptionConverter extends ExceptionConverterHelper {
 
-    @Inject
-    public PermissionTest(CommandProcessor processor) {
-        processor.registerCommands(this);
+    @ExceptionMatch
+    public void convert(CommandException e) throws CommandException {
+        throw new CommandException(e.getMessage(), e);
     }
 
-    @Command(aliases = "testperm", desc = "Test a permission")
-    public void testPermission(Subject subject, Response response, String permission) {
-        response.respond("evaluates to " + subject.testPermission(permission));
-    }
 
 }

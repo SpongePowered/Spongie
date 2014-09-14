@@ -29,6 +29,8 @@ import com.sk89q.eduardo.irc.IrcContext;
 import com.sk89q.eduardo.irc.IrcContexts;
 import com.sk89q.eduardo.irc.PircBotXService;
 import com.sk89q.intake.CommandException;
+import com.sk89q.intake.InvocationCommandException;
+import com.sk89q.intake.context.CommandContext;
 import com.sk89q.intake.context.CommandLocals;
 import com.sk89q.intake.dispatcher.Dispatcher;
 import com.sk89q.intake.dispatcher.SimpleDispatcher;
@@ -60,6 +62,7 @@ public class CommandProcessor extends ListenerAdapter<PircBotX> {
         builder = new ParametricBuilder();
         builder.setAuthorizer(new AuthServiceAuthorizer(authService));
         builder.addBinding(new DefaultBinding());
+        builder.addExceptionConverter(new DefaultExceptionConverter());
     }
 
     public Dispatcher getDispatcher() {
@@ -81,19 +84,25 @@ public class CommandProcessor extends ListenerAdapter<PircBotX> {
             eventBus.post(commandEvent);
 
             if (!commandEvent.isCancelled()) {
-                CommandLocals locals = new CommandLocals();
-                IrcContext context = IrcContexts.create(event);
-                locals.put(GenericMessageEvent.class, event);
-                locals.put(IrcContext.class, context);
-                locals.put(Subject.class, authService.login(context));
+                String[] split = CommandContext.split(arguments);
 
-                try {
-                    dispatcher.call(arguments, locals, new String[0]);
-                } catch (CommandException e) {
-                    log.warn("Failed to execute a command", e);
-                    event.respond("Failed to execute the command");
-                } catch (AuthorizationException ignored) {
-                    // Don't do anything
+                if (split.length > 0 && dispatcher.contains(split[0])) {
+                    CommandLocals locals = new CommandLocals();
+                    IrcContext context = IrcContexts.create(event);
+                    locals.put(GenericMessageEvent.class, event);
+                    locals.put(IrcContext.class, context);
+                    locals.put(Subject.class, authService.login(context));
+
+                    try {
+                        dispatcher.call(arguments, locals, new String[0]);
+                    } catch (InvocationCommandException e) {
+                        log.warn("Failed to execute a command", e);
+                        event.respond("An unexpected error occurred while executing the command");
+                    } catch (CommandException e) {
+                        event.respond("error: " + e.getMessage());
+                    } catch (AuthorizationException ignored) {
+                        // Don't do anything
+                    }
                 }
             }
         }

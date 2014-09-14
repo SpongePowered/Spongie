@@ -20,6 +20,7 @@
 package com.sk89q.eduardo.helper.command;
 
 import com.sk89q.eduardo.auth.Subject;
+import com.sk89q.eduardo.helper.Response;
 import com.sk89q.intake.parametric.ParameterException;
 import com.sk89q.intake.parametric.argument.ArgumentStack;
 import com.sk89q.intake.parametric.binding.BindingBehavior;
@@ -42,14 +43,26 @@ public class DefaultBinding extends BindingHelper {
     }
 
     @BindingMatch(type = GenericMessageEvent.class,
-                  behavior = BindingBehavior.PROVIDES,
-                  consumedCount = -1)
+            behavior = BindingBehavior.PROVIDES,
+            consumedCount = -1)
     public GenericMessageEvent getMessageEvent(ArgumentStack context) throws ParameterException {
         GenericMessageEvent event = context.getContext().getLocals().get(GenericMessageEvent.class);
         if (event == null) {
             throw new ParameterException("Uh oh! The GenericMessageEvent is not known.");
         } else {
             return event;
+        }
+    }
+
+    @BindingMatch(type = Response.class,
+            behavior = BindingBehavior.PROVIDES,
+            consumedCount = -1)
+    public Response getResponse(ArgumentStack context) throws ParameterException {
+        GenericMessageEvent event = context.getContext().getLocals().get(GenericMessageEvent.class);
+        if (event == null) {
+            throw new ParameterException("Uh oh! The GenericMessageEvent is not known.");
+        } else {
+            return event::respond;
         }
     }
 
