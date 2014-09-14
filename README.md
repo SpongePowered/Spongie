@@ -40,7 +40,7 @@ public class HelloWorld {
 
 ### Powerful permissions
 
-```json
+```perl
 config-perms = {
   policy = [
     {
@@ -63,7 +63,7 @@ config-perms = {
 
 ### Service-oriented
 
-```json
+```perl
 services = {
   mapping = {
     com.sk89q.eduardo.helper.shortener.URLShortener = com.sk89q.eduardo.helper.shortener.BitlyShortener
@@ -73,7 +73,7 @@ services = {
 
 ### Easily configured
 
-```json
+```perl
 modules = {
   enabled = [
     com.sk89q.eduardo.irc.PircBotXService,
