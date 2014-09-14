@@ -21,10 +21,11 @@ package com.sk89q.eduardo.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.*;
 
 public final class SimpleLogFormatter extends Formatter {
 
@@ -51,6 +52,11 @@ public final class SimpleLogFormatter extends Formatter {
                 pw.close();
                 sb.append(sw.toString());
             } catch (Exception e) {
+                System.err.println(
+                        "!!!! UH OH! An exception occurred while trying to print the exception! " +
+                                "The following is NOT the actual error; rather, it is the exception " +
+                                "that prevents us from printing the real error");
+                e.printStackTrace();
             }
         }
 
