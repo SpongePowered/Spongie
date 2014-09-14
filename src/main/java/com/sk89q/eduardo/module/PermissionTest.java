@@ -17,35 +17,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.helper;
+package com.sk89q.eduardo.module;
 
-import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
-import com.sk89q.eduardo.event.CommandEvent;
-import com.sk89q.eduardo.irc.PircBotXService;
-import com.typesafe.config.Config;
+import com.sk89q.eduardo.auth.Subject;
+import com.sk89q.eduardo.helper.command.CommandProcessor;
+import com.sk89q.intake.Command;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
-public class CommandProcessor extends ListenerAdapter<PircBotX> {
-
-    @Inject private Config config;
-    @Inject private EventBus eventBus;
+public class PermissionTest extends ListenerAdapter<PircBotX> {
 
     @Inject
-    public CommandProcessor(PircBotXService bot) {
-        bot.registerListener(this);
+    public PermissionTest(CommandProcessor processor) {
+        processor.registerCommands(this);
     }
 
-    @Override
-    public void onGenericMessage(GenericMessageEvent<PircBotX> event) throws Exception {
-        String message = event.getMessage();
-        String prefix = config.getString("command.prefix");
-        if (message.length() > prefix.length() && message.startsWith(prefix)) {
-            String arguments = message.substring(prefix.length());
-            eventBus.post(new CommandEvent(event, arguments));
-        }
+    @Command(aliases = "testperm", desc = "Test a permission")
+    public void testPermission(Subject subject, GenericMessageEvent event, String permission) {
+        event.respond("evaluates to " + subject.testPermission(permission));
     }
 
 }

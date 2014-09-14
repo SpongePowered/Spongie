@@ -23,7 +23,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.sk89q.eduardo.event.CommandEvent;
-import com.sk89q.eduardo.helper.CommandProcessor;
+import com.sk89q.eduardo.helper.command.CommandProcessor;
 import com.sk89q.eduardo.http.JettyService;
 import com.sk89q.eduardo.irc.PircBotXService;
 import org.eclipse.jetty.server.Request;
@@ -54,7 +54,7 @@ public class HelloWorld extends ListenerAdapter<PircBotX> {
     @Subscribe
     public void onCommand(CommandEvent event) throws Exception {
         if (event.getArguments().startsWith("helloworld")) {
-            event.respond("Hello world!");
+            event.respond("Hello world! ");
         }
     }
 

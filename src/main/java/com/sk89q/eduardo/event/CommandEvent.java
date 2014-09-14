@@ -23,10 +23,11 @@ import org.pircbotx.PircBotX;
 import org.pircbotx.User;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
-public class CommandEvent {
+public class CommandEvent implements Cancellable {
 
     private final GenericMessageEvent<PircBotX> messageEvent;
     private final String arguments;
+    private boolean cancelled;
 
     public CommandEvent(GenericMessageEvent<PircBotX> messageEvent, String arguments) {
         this.messageEvent = messageEvent;
@@ -51,6 +52,16 @@ public class CommandEvent {
 
     public String getArguments() {
         return arguments;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
 }
