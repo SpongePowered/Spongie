@@ -40,7 +40,7 @@ public class HelloWorld {
 
 ### Powerful permissions
 
-```perl
+```json
 config-perms = {
   policy = [
     {
@@ -61,6 +61,41 @@ config-perms = {
 }
 ```
 
+### Service-oriented
+
+```json
+services = {
+  mapping = {
+    com.sk89q.eduardo.helper.shortener.URLShortener = com.sk89q.eduardo.helper.shortener.BitlyShortener
+  }
+}
+```
+
+### Easily configured
+
+```json
+modules = {
+  enabled = [
+    com.sk89q.eduardo.irc.PircBotXService,
+    com.sk89q.eduardo.module.github.WebHookAnnouncer,
+    com.sk89q.eduardo.module.Shortener,
+  ]
+}
+
+irc = {
+  name = somebot
+  version = Eduardo
+
+  server = {
+    host = ""
+    port = 6667
+    password = null
+    ssl = false
+    auto_join = [ ]
+  }
+}
+```
+
 ### Web-accessible
 
 ```java
@@ -77,10 +112,8 @@ public class HelloWorld extends SimpleHandler {
                                   HttpServletRequest request, HttpServletResponse response) {
         return create().body("Hello wolrd!");
     }
-
 }
 ```
-
 
 Compiling
 ---------
