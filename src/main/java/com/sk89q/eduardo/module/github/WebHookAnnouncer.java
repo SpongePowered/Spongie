@@ -26,6 +26,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.eventbus.EventBus;
 import com.google.common.io.ByteStreams;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.sk89q.eduardo.helper.GenericBroadcast;
 import com.sk89q.eduardo.helper.shortener.URLShortener;
 import com.sk89q.eduardo.http.JettyService;
@@ -58,6 +59,7 @@ import static com.sk89q.eduardo.http.handler.SimpleResponse.create;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
+@Singleton
 public class WebHookAnnouncer extends ListenerAdapter<PircBotX> {
 
     private static final Logger log = LoggerFactory.getLogger(WebHookAnnouncer.class);

@@ -20,14 +20,14 @@
 package com.sk89q.eduardo.module;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.sk89q.eduardo.auth.Subject;
 import com.sk89q.eduardo.helper.command.CommandProcessor;
 import com.sk89q.intake.Command;
-import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
-public class PermissionTest extends ListenerAdapter<PircBotX> {
+@Singleton
+public class PermissionTest {
 
     @Inject
     public PermissionTest(CommandProcessor processor) {

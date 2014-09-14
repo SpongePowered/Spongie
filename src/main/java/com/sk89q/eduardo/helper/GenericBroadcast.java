@@ -21,8 +21,10 @@ package com.sk89q.eduardo.helper;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.sk89q.eduardo.event.BroadcastEvent;
 
+@Singleton
 public class GenericBroadcast {
 
     @Inject private EventBus eventBus;

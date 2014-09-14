@@ -20,6 +20,7 @@
 package com.sk89q.eduardo.helper.shortener;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.rosaloves.bitlyj.Bitly;
 import com.rosaloves.bitlyj.Bitly.Provider;
 import com.rosaloves.bitlyj.BitlyException;
@@ -31,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@Singleton
 public class BitlyShortener implements URLShortener {
 
     private static final Logger log = LoggerFactory.getLogger(BitlyShortener.class);

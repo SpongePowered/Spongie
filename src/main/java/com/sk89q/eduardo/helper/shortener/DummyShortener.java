@@ -19,8 +19,11 @@
 
 package com.sk89q.eduardo.helper.shortener;
 
+import com.google.inject.Singleton;
+
 import java.net.URL;
 
+@Singleton
 public class DummyShortener implements URLShortener {
 
     @Override

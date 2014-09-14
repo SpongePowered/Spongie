@@ -22,6 +22,7 @@ package com.sk89q.eduardo.module;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.sk89q.eduardo.event.CommandEvent;
 import com.sk89q.eduardo.helper.command.CommandProcessor;
 import com.sk89q.eduardo.http.JettyService;
@@ -37,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Singleton
 public class HelloWorld extends ListenerAdapter<PircBotX> {
 
     @Inject private CommandProcessor processor;

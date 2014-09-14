@@ -20,6 +20,7 @@
 package com.sk89q.eduardo.auth;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.sk89q.eduardo.auth.policy.MultiMapPolicy;
 import com.sk89q.eduardo.auth.policy.Policy;
 import com.sk89q.eduardo.irc.ChannelUserMode;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@Singleton
 public class ConfigAuthProvider implements AuthService {
 
     private final Policy<IrcContext> policy = new MultiMapPolicy<>();
