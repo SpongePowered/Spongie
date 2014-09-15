@@ -20,18 +20,16 @@
 package com.sk89q.eduardo.module;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sk89q.eduardo.event.CommandEvent;
+import com.sk89q.eduardo.helper.Response;
 import com.sk89q.eduardo.helper.command.CommandProcessor;
+import com.sk89q.eduardo.helper.command.RateLimit;
 import com.sk89q.eduardo.http.JettyService;
-import com.sk89q.eduardo.irc.PircBotXService;
+import com.sk89q.intake.Command;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.ContextHandler;
-import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.ListenerAdapter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,13 +37,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Singleton
-public class HelloWorld extends ListenerAdapter<PircBotX> {
-
-    @Inject private CommandProcessor processor;
+public class HelloWorld {
 
     @Inject
-    public HelloWorld(PircBotXService bot, JettyService jetty, EventBus bus) {
-        bot.registerListener(this);
+    public HelloWorld(CommandProcessor commands, JettyService jetty, EventBus bus) {
+        commands.registerCommands(this);
         bus.register(this);
 
         ContextHandler testHandler = new ContextHandler("/hello");
@@ -53,11 +49,10 @@ public class HelloWorld extends ListenerAdapter<PircBotX> {
         jetty.registerHandler(testHandler);
     }
 
-    @Subscribe
-    public void onCommand(CommandEvent event) throws Exception {
-        if (event.getArguments().startsWith("helloworld")) {
-            event.respond("Hello world! ");
-        }
+    @Command(aliases = "hello", desc = "Hello world!")
+    @RateLimit
+    public void helloWorld(Response response) {
+        response.respond("Hello world!");
     }
 
     private class HelloWorldHandler extends AbstractHandler {

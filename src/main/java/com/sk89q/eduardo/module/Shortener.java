@@ -24,6 +24,7 @@ import com.google.inject.Singleton;
 import com.sk89q.eduardo.auth.Subject;
 import com.sk89q.eduardo.helper.Response;
 import com.sk89q.eduardo.helper.command.CommandProcessor;
+import com.sk89q.eduardo.helper.command.RateLimit;
 import com.sk89q.eduardo.helper.shortener.URLShortener;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.CommandException;
@@ -45,6 +46,7 @@ public class Shortener {
 
     @Command(aliases = {"shorten", "short", "shrt"}, desc = "Shorten a URL")
     @Require("shortener.shorten")
+    @RateLimit(weight = 2)
     public void shorten(Subject subject, Response response, @Text String url) throws CommandException {
         try {
             response.respond("Shortened: " + shortener.shorten(new URL(url)));
