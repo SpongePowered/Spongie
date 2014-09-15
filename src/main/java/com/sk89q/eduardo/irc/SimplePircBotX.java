@@ -27,14 +27,14 @@ import com.sk89q.eduardo.event.BroadcastEvent;
 import com.sk89q.eduardo.event.StartupEvent;
 import com.typesafe.config.Config;
 import org.pircbotx.Configuration;
+import org.pircbotx.Configuration.Builder;
+import org.pircbotx.MultiBotManager;
 import org.pircbotx.PircBotX;
 import org.pircbotx.UtilSSLSocketFactory;
-import org.pircbotx.exception.IrcException;
 import org.pircbotx.hooks.Listener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,8 +44,8 @@ public class SimplePircBotX implements PircBotXService {
     private static final Logger log = LoggerFactory.getLogger(SimplePircBotX.class);
 
     private final List<Listener<PircBotX>> listeners = new ArrayList<>();
-    private final Configuration.Builder<PircBotX> builder;
-    private PircBotX bot;
+    private final List<Builder<PircBotX>> builders = new ArrayList<>();
+    private final MultiBotManager<PircBotX> manager = new MultiBotManager<>();
 
     @Inject
     public SimplePircBotX(Config config, EventBus eventBus) {
@@ -53,43 +53,45 @@ public class SimplePircBotX implements PircBotXService {
 
         Config irc = config.getConfig("irc");
 
-        builder = new Configuration.Builder<>()
-                .setName(irc.getString("name"))
-                .setLogin(irc.getString("name"))
-                .setFinger(irc.getString("name"))
-                .setRealName(irc.getString("name"))
+        Builder<PircBotX> base = new Configuration.Builder<>()
                 .setVersion(irc.getString("version"))
                 .setAutoSplitMessage(true)
                 .setIdentServerEnabled(false)
-                .setAutoNickChange(true)
-                .setServer(irc.getString("server.host"), irc.getInt("server.port"), irc.getString("server.password"));
+                .setAutoNickChange(true);
 
-        if (irc.getBoolean("server.ssl")) {
-            builder.setSocketFactory(new UtilSSLSocketFactory().trustAllCertificates());
-        }
+        for (Config server : irc.getConfigList("servers")) {
+            server = server.withFallback(irc.getConfig("default-server"));
 
-        for (String channel : irc.getStringList("server.auto_join")) {
-            log.info("Auto-joining channel {}", channel);
-            builder.addAutoJoinChannel(channel);
+            Builder<PircBotX> builder = new Builder<>(base)
+                    .setServer(server.getString("host"), server.getInt("port"), server.getString("password"));
+
+            builder
+                    .setName(server.getString("name"))
+                    .setLogin(server.getString("name"))
+                    .setFinger(server.getString("name"))
+                    .setRealName(server.getString("name"));
+
+            if (server.getBoolean("ssl")) {
+                builder.setSocketFactory(new UtilSSLSocketFactory().trustAllCertificates());
+            }
+
+            for (String channel : server.getStringList("auto-join")) {
+                log.info("Auto-joining channel {}", channel);
+                builder.addAutoJoinChannel(channel);
+            }
+
+            builders.add(builder);
         }
     }
 
     @Subscribe
     public void onStartup(StartupEvent event) {
-        listeners.forEach(builder::addListener);
+        for (Builder<PircBotX> builder : builders) {
+            listeners.forEach(builder::addListener);
+            manager.addBot(builder.buildConfiguration());
+        }
 
-        Configuration<PircBotX> configuration = builder.buildConfiguration();
-        bot = new PircBotX(configuration);
-
-        Runnable runnable = () -> {
-            try {
-                bot.startBot();
-            } catch (IOException | IrcException e) {
-                log.error("Failed to start IRC client", e);
-            }
-        };
-
-        Thread thread = new Thread(runnable, "PircBotX");
+        Thread thread = new Thread(manager::start, "PircBotX");
         thread.start();
     }
 
@@ -97,7 +99,9 @@ public class SimplePircBotX implements PircBotXService {
     public void onBroadcast(BroadcastEvent event) {
         String target = event.getTarget();
         if (target.startsWith("#")) {
-            bot.sendIRC().message(target, event.getMessage());
+            for (PircBotX bot : manager.getBots()) {
+                bot.sendIRC().message(target, event.getMessage());
+            }
         }
     }
 
