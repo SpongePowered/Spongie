@@ -26,6 +26,7 @@ import com.sk89q.intake.parametric.argument.ArgumentStack;
 import com.sk89q.intake.parametric.binding.BindingBehavior;
 import com.sk89q.intake.parametric.binding.BindingHelper;
 import com.sk89q.intake.parametric.binding.BindingMatch;
+import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
 public class DefaultBinding extends BindingHelper {
@@ -52,6 +53,14 @@ public class DefaultBinding extends BindingHelper {
         } else {
             return event;
         }
+    }
+
+    @BindingMatch(type = PircBotX.class,
+            behavior = BindingBehavior.PROVIDES,
+            consumedCount = -1)
+    public PircBotX getBot(ArgumentStack context) throws ParameterException {
+        GenericMessageEvent event = getMessageEvent(context);
+        return event.getBot();
     }
 
     @BindingMatch(type = Response.class,
