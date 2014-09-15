@@ -22,12 +22,18 @@ package com.sk89q.eduardo.helper.command;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.parametric.handler.ExceptionConverterHelper;
 import com.sk89q.intake.parametric.handler.ExceptionMatch;
+import com.sk89q.intake.util.auth.AuthorizationException;
 
 public class DefaultExceptionConverter extends ExceptionConverterHelper {
 
     @ExceptionMatch
+    public void convert(AuthorizationException e) throws AuthorizationException {
+        throw e;
+    }
+
+    @ExceptionMatch
     public void convert(CommandException e) throws CommandException {
-        throw new CommandException(e.getMessage(), e);
+        throw e;
     }
 
 
