@@ -23,8 +23,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sk89q.eduardo.auth.Subject;
 import com.sk89q.eduardo.helper.Response;
-import com.sk89q.eduardo.helper.command.CommandProcessor;
-import com.sk89q.eduardo.helper.command.RateLimit;
+import com.sk89q.eduardo.helper.command.CommandManager;
+import com.sk89q.eduardo.helper.throttle.RateLimit;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
 
@@ -32,7 +32,7 @@ import com.sk89q.intake.Require;
 public class PermissionTest {
 
     @Inject
-    public PermissionTest(CommandProcessor processor) {
+    public PermissionTest(CommandManager processor) {
         processor.registerCommands(this);
     }
 

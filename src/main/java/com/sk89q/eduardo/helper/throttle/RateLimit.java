@@ -17,25 +17,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.helper.command;
+package com.sk89q.eduardo.helper.throttle;
 
-import com.sk89q.eduardo.auth.AuthService;
-import com.sk89q.eduardo.auth.Subject;
-import com.sk89q.intake.context.CommandLocals;
-import com.sk89q.intake.util.auth.Authorizer;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-class AuthServiceAuthorizer implements Authorizer {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface RateLimit {
 
-    private final AuthService authService;
-
-    AuthServiceAuthorizer(AuthService authService) {
-        this.authService = authService;
-    }
-
-    @Override
-    public boolean testPermission(CommandLocals locals, String permission) {
-        Subject subject = locals.get(Subject.class);
-        return subject != null && subject.testPermission(permission);
-    }
+    double weight() default 1;
 
 }

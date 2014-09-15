@@ -23,8 +23,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sk89q.eduardo.helper.Response;
-import com.sk89q.eduardo.helper.command.CommandProcessor;
-import com.sk89q.eduardo.helper.command.RateLimit;
+import com.sk89q.eduardo.helper.command.CommandManager;
+import com.sk89q.eduardo.helper.throttle.RateLimit;
 import com.sk89q.eduardo.http.JettyService;
 import com.sk89q.intake.Command;
 import org.eclipse.jetty.server.Request;
@@ -40,7 +40,7 @@ import java.io.IOException;
 public class HelloWorld {
 
     @Inject
-    public HelloWorld(CommandProcessor commands, JettyService jetty, EventBus bus) {
+    public HelloWorld(CommandManager commands, JettyService jetty, EventBus bus) {
         commands.registerCommands(this);
         bus.register(this);
 

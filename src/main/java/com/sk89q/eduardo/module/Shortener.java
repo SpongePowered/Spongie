@@ -23,8 +23,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sk89q.eduardo.auth.Subject;
 import com.sk89q.eduardo.helper.Response;
-import com.sk89q.eduardo.helper.command.CommandProcessor;
-import com.sk89q.eduardo.helper.command.RateLimit;
+import com.sk89q.eduardo.helper.command.CommandManager;
+import com.sk89q.eduardo.helper.throttle.RateLimit;
 import com.sk89q.eduardo.helper.shortener.URLShortener;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.CommandException;
@@ -40,7 +40,7 @@ public class Shortener {
     @Inject private URLShortener shortener;
 
     @Inject
-    public Shortener(CommandProcessor processor) {
+    public Shortener(CommandManager processor) {
         processor.registerCommands(this);
     }
 

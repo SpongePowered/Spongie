@@ -19,15 +19,23 @@
 
 package com.sk89q.eduardo.helper.command;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.sk89q.eduardo.auth.AuthService;
+import com.sk89q.eduardo.auth.Subject;
+import com.sk89q.intake.context.CommandLocals;
+import com.sk89q.intake.util.auth.Authorizer;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface RateLimit {
+class ServiceAuthorizer implements Authorizer {
 
-    double weight() default 1;
+    private final AuthService authService;
+
+    ServiceAuthorizer(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @Override
+    public boolean testPermission(CommandLocals locals, String permission) {
+        Subject subject = locals.get(Subject.class);
+        return subject != null && subject.testPermission(permission);
+    }
 
 }

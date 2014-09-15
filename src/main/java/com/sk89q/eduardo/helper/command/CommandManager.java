@@ -45,9 +45,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-public class CommandProcessor extends ListenerAdapter<PircBotX> {
+public class CommandManager extends ListenerAdapter<PircBotX> {
 
-    private static final Logger log = LoggerFactory.getLogger(CommandProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(CommandManager.class);
 
     @Inject private Config config;
     @Inject private EventBus eventBus;
@@ -56,12 +56,12 @@ public class CommandProcessor extends ListenerAdapter<PircBotX> {
     private final ParametricBuilder builder;
 
     @Inject
-    public CommandProcessor(PircBotXService bot, AuthService authService, RateLimiter limiter) {
+    public CommandManager(PircBotXService bot, AuthService authService, RateLimiter limiter) {
         bot.registerListener(this);
 
         dispatcher = new SimpleDispatcher();
         builder = new ParametricBuilder();
-        builder.setAuthorizer(new AuthServiceAuthorizer(authService));
+        builder.setAuthorizer(new ServiceAuthorizer(authService));
         builder.addBinding(new DefaultBinding());
         builder.addExceptionConverter(new DefaultExceptionConverter());
         builder.addInvokeListener(new RateLimitListener(limiter));

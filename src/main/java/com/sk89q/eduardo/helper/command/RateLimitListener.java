@@ -19,6 +19,7 @@
 
 package com.sk89q.eduardo.helper.command;
 
+import com.sk89q.eduardo.helper.throttle.RateLimit;
 import com.sk89q.eduardo.helper.throttle.RateLimiter;
 import com.sk89q.eduardo.irc.IrcContext;
 import com.sk89q.intake.CommandException;
