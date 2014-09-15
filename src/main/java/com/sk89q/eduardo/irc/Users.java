@@ -30,4 +30,11 @@ public final class Users {
         return user.getNick() + "!" + user.getLogin() + "@" + user.getHostmask();
     }
 
+    public static String preventMention(String name) {
+        if (name.length() >= 2) {
+            return name.charAt(0) + "." + name.substring(1);
+        } else {
+            return name;
+        }
+    }
 }

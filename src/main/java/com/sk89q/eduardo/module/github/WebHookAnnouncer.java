@@ -32,6 +32,7 @@ import com.sk89q.eduardo.helper.shortener.URLShortener;
 import com.sk89q.eduardo.http.JettyService;
 import com.sk89q.eduardo.http.handler.SimpleHandler;
 import com.sk89q.eduardo.http.handler.SimpleResponse;
+import com.sk89q.eduardo.irc.Users;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import org.apache.commons.codec.binary.Hex;
@@ -141,7 +142,7 @@ public class WebHookAnnouncer extends ListenerAdapter<PircBotX> {
 
         broadcast(payload.repository.fullName, String.format(
                 "[%s] %s pushed %d commit%s to %s (%s)",
-                payload.repository.name, payload.pusher.name, payload.commits.size(),
+                payload.repository.name, Users.preventMention(payload.pusher.name), payload.commits.size(),
                 payload.commits.size() == 1 ? "" : "s",
                 simplifyGitRef(payload.ref), shortener.shorten(payload.compare)));
 
@@ -156,7 +157,7 @@ public class WebHookAnnouncer extends ListenerAdapter<PircBotX> {
                         "%s/%s %s: %s (by %s)",
                         payload.repository.name, simplifyGitRef(payload.ref),
                         simplifyGitId(commit.id), simplfiyCommitMessage(commit.message),
-                        commit.author.name));
+                        Users.preventMention(commit.author.name)));
             }
         }
     }
