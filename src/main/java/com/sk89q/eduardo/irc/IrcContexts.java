@@ -62,11 +62,7 @@ public final class IrcContexts {
             }
         }
 
-        return new IrcContext(getUserMask(user), channel != null ? channel.getName() : null, modes);
-    }
-
-    private static String getUserMask(User user) {
-        return user.getNick() + "!" + user.getLogin() + "@" + user.getHostmask();
+        return new IrcContext(user, channel != null ? channel.getName() : null, modes);
     }
 
 }

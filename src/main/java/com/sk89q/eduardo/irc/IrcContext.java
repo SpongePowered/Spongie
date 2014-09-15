@@ -19,6 +19,8 @@
 
 package com.sk89q.eduardo.irc;
 
+import org.pircbotx.User;
+
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -28,11 +30,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class IrcContext {
 
-    private final String user;
+    private final User user;
     @Nullable private final String channel;
     private final EnumSet<ChannelUserMode> modes;
 
-    public IrcContext(String user, @Nullable String channel, List<ChannelUserMode> modes) {
+    public IrcContext(User user, @Nullable String channel, List<ChannelUserMode> modes) {
         checkNotNull(user);
         this.user = user;
         this.channel = channel;
@@ -43,11 +45,11 @@ public class IrcContext {
         }
     }
 
-    public IrcContext(String user, @Nullable String channel, ChannelUserMode... modes) {
+    public IrcContext(User user, @Nullable String channel, ChannelUserMode... modes) {
         this(user, channel, Arrays.asList(modes));
     }
 
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
@@ -60,4 +62,12 @@ public class IrcContext {
         return modes;
     }
 
+    @Override
+    public String toString() {
+        return "IrcContext{" +
+                "user=" + user +
+                ", channel='" + channel + '\'' +
+                ", modes=" + modes +
+                '}';
+    }
 }

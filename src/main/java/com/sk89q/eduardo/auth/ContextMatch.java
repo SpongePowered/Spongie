@@ -21,6 +21,7 @@ package com.sk89q.eduardo.auth;
 
 import com.sk89q.eduardo.irc.ChannelUserMode;
 import com.sk89q.eduardo.irc.IrcContext;
+import com.sk89q.eduardo.irc.Users;
 import com.sk89q.eduardo.util.FnMatch;
 import com.sk89q.eduardo.util.FnMatch.Flag;
 
@@ -73,12 +74,11 @@ public class ContextMatch implements Predicate<IrcContext> {
 
     @Override
     public boolean test(IrcContext context) {
-        boolean pass = false;
-
         if (!users.isEmpty()) {
             if (context.getUser() != null) {
+                boolean pass = false;
                 for (String pattern : users) {
-                    if (FnMatch.fnmatch(pattern, context.getUser(), EnumSet.of(Flag.CASEFOLD))) {
+                    if (FnMatch.fnmatch(pattern, Users.getUserMask(context.getUser()), EnumSet.of(Flag.CASEFOLD))) {
                         pass = true;
                         break;
                     }
@@ -93,7 +93,7 @@ public class ContextMatch implements Predicate<IrcContext> {
 
         if (!channels.isEmpty()) {
             if (context.getChannel() != null) {
-                pass = channels.contains(context.getChannel());
+                boolean pass = channels.contains(context.getChannel());
                 if (!pass) {
                     return false;
                 }
@@ -104,6 +104,7 @@ public class ContextMatch implements Predicate<IrcContext> {
 
         if (!modes.isEmpty()) {
             if (!context.getModes().isEmpty()) {
+                boolean pass = false;
                 for (ChannelUserMode mode : context.getModes()) {
                     if (modes.contains(mode)) {
                         pass = true;
@@ -118,7 +119,7 @@ public class ContextMatch implements Predicate<IrcContext> {
             }
         }
 
-        return pass;
+        return true;
     }
 
 }

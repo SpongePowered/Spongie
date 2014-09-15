@@ -25,6 +25,7 @@ import com.google.inject.Singleton;
 import com.sk89q.eduardo.auth.AuthService;
 import com.sk89q.eduardo.auth.Subject;
 import com.sk89q.eduardo.event.CommandEvent;
+import com.sk89q.eduardo.helper.throttle.RateLimiter;
 import com.sk89q.eduardo.irc.IrcContext;
 import com.sk89q.eduardo.irc.IrcContexts;
 import com.sk89q.eduardo.irc.PircBotXService;
@@ -55,7 +56,7 @@ public class CommandProcessor extends ListenerAdapter<PircBotX> {
     private final ParametricBuilder builder;
 
     @Inject
-    public CommandProcessor(PircBotXService bot, AuthService authService) {
+    public CommandProcessor(PircBotXService bot, AuthService authService, RateLimiter limiter) {
         bot.registerListener(this);
 
         dispatcher = new SimpleDispatcher();
@@ -63,6 +64,7 @@ public class CommandProcessor extends ListenerAdapter<PircBotX> {
         builder.setAuthorizer(new AuthServiceAuthorizer(authService));
         builder.addBinding(new DefaultBinding());
         builder.addExceptionConverter(new DefaultExceptionConverter());
+        builder.addInvokeListener(new RateLimitListener(limiter));
     }
 
     public Dispatcher getDispatcher() {
@@ -101,7 +103,7 @@ public class CommandProcessor extends ListenerAdapter<PircBotX> {
                     } catch (CommandException e) {
                         event.respond("error: " + e.getMessage());
                     } catch (AuthorizationException ignored) {
-                        // Don't do anything
+                        log.info("User was not permitted to run !" + arguments);
                     }
                 }
             }
