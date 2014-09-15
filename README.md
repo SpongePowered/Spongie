@@ -83,16 +83,18 @@ modules = {
 }
 
 irc = {
-  name = somebot
-  version = Eduardo
+  version = Scott/1.0
 
-  server = {
-    host = ""
-    port = 6667
-    password = null
-    ssl = false
-    auto_join = [ ]
-  }
+  servers = [
+    {
+      name = Scott
+      host = localhost
+      port = 7777
+      password = "example"
+      ssl = true
+      auto-join = [ "#example" ]
+    }
+  ]
 }
 ```
 
