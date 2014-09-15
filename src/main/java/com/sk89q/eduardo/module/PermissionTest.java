@@ -35,6 +35,8 @@ public class PermissionTest {
     }
 
     @Command(aliases = "testperm", desc = "Test a permission")
+    @Require("permissions.test")
+    @RateLimit
     public void testPermission(Subject subject, Response response, String permission) {
         response.respond("evaluates to " + subject.testPermission(permission));
     }
