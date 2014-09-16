@@ -25,12 +25,8 @@ public class Shortener {
 ### Simple commands
 
 ```java
+@AutoRegister
 public class HelloWorld {
-    @Inject
-    public HelloWorld(CommandProcessor processor) {
-        processor.registerCommands(this);
-    }
-
     @Command(aliases = "hello", desc = "Say hello back")
     public void helloWorld(Response response) {
         response.respond("Hello world!")
@@ -76,7 +72,7 @@ services = {
 ```perl
 modules = {
   enabled = [
-    com.sk89q.eduardo.irc.PircBotXService,
+    com.sk89q.eduardo.irc.PircBotXClient,
     com.sk89q.eduardo.module.github.WebHookAnnouncer,
     com.sk89q.eduardo.module.Shortener,
   ]
@@ -87,6 +83,7 @@ irc = {
 
   servers = [
     {
+      id = local # server ID
       name = Scott
       host = localhost
       port = 7777
@@ -103,7 +100,7 @@ irc = {
 ```java
 public class HelloWorld extends SimpleHandler {
     @Inject
-    public HelloWorld(JettyService jetty) {
+    public HelloWorld(JettyServer jetty) {
         ContextHandler handler = new ContextHandler("/hello");
         handler.setHandler(this);
         jetty.registerHandler(handler);
