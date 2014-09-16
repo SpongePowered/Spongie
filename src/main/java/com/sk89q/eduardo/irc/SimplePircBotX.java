@@ -31,23 +31,22 @@ import org.pircbotx.Configuration.Builder;
 import org.pircbotx.MultiBotManager;
 import org.pircbotx.PircBotX;
 import org.pircbotx.UtilSSLSocketFactory;
+import org.pircbotx.hooks.Event;
 import org.pircbotx.hooks.Listener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Singleton
-public class SimplePircBotX implements PircBotXService {
+public class SimplePircBotX implements PircBotXService, Listener<IrcBot> {
 
     private static final Logger log = LoggerFactory.getLogger(SimplePircBotX.class);
 
-    private final List<Listener<IrcBot>> listeners = new ArrayList<>();
     private final Map<String, Builder<IrcBot>> builders = new HashMap<>();
     private final MultiBotManager<IrcBot> manager = new MultiBotManager<>();
+    @Inject private EventBus eventBus;
 
     @Inject
     public SimplePircBotX(Config config, EventBus eventBus) {
@@ -90,7 +89,7 @@ public class SimplePircBotX implements PircBotXService {
     public void onStartup(StartupEvent event) {
         for (Map.Entry<String, Builder<IrcBot>> entry : builders.entrySet()) {
             Builder<IrcBot> builder = entry.getValue();
-            listeners.forEach(builder::addListener);
+            builder.addListener(this);
             manager.addBot(new IrcBot(builder.buildConfiguration(), entry.getKey()));
         }
 
@@ -109,8 +108,8 @@ public class SimplePircBotX implements PircBotXService {
     }
 
     @Override
-    public void registerListener(Listener<IrcBot> listener) {
-        listeners.add(listener);
+    public void onEvent(Event<IrcBot> event) throws Exception {
+        eventBus.post(event);
     }
 
 }

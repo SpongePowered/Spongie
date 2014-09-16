@@ -19,10 +19,6 @@
 
 package com.sk89q.eduardo.irc;
 
-import org.pircbotx.hooks.Listener;
-
 public interface PircBotXService {
-
-    void registerListener(Listener<IrcBot> listener);
 
 }

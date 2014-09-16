@@ -20,6 +20,7 @@
 package com.sk89q.eduardo.helper.command;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sk89q.eduardo.auth.AuthService;
@@ -29,7 +30,6 @@ import com.sk89q.eduardo.helper.throttle.RateLimiter;
 import com.sk89q.eduardo.irc.IrcBot;
 import com.sk89q.eduardo.irc.IrcContext;
 import com.sk89q.eduardo.irc.IrcContexts;
-import com.sk89q.eduardo.irc.PircBotXService;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.InvocationCommandException;
 import com.sk89q.intake.context.CommandContext;
@@ -39,27 +39,25 @@ import com.sk89q.intake.dispatcher.SimpleDispatcher;
 import com.sk89q.intake.parametric.ParametricBuilder;
 import com.sk89q.intake.util.auth.AuthorizationException;
 import com.typesafe.config.Config;
-import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-public class CommandManager extends ListenerAdapter<IrcBot> {
+public class CommandManager {
 
     private static final Logger log = LoggerFactory.getLogger(CommandManager.class);
 
+    private final EventBus eventBus;
     @Inject private Config config;
-    @Inject private EventBus eventBus;
     @Inject private AuthService authService;
     private final Dispatcher dispatcher;
     private final ParametricBuilder builder;
 
     @Inject
-    public CommandManager(PircBotXService bot, AuthService authService, RateLimiter limiter) {
-        bot.registerListener(this);
-
+    public CommandManager(EventBus eventBus, AuthService authService, RateLimiter limiter) {
+        this.eventBus = eventBus;
+        eventBus.register(this);
         dispatcher = new SimpleDispatcher();
         builder = new ParametricBuilder();
         builder.setAuthorizer(new ServiceAuthorizer(authService));
@@ -76,7 +74,7 @@ public class CommandManager extends ListenerAdapter<IrcBot> {
         builder.registerMethodsAsCommands(dispatcher, object);
     }
 
-    @Override
+    @Subscribe
     public void onGenericMessage(GenericMessageEvent<IrcBot> event) {
         String message = event.getMessage();
         String prefix = config.getString("command.prefix");
