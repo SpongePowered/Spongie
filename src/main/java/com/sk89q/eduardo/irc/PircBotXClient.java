@@ -40,21 +40,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Singleton
-public class PircBotXService implements Listener<IrcBot> {
+public class PircBotXClient implements Listener<IRCBot> {
 
-    private static final Logger log = LoggerFactory.getLogger(PircBotXService.class);
+    private static final Logger log = LoggerFactory.getLogger(PircBotXClient.class);
 
-    private final Map<String, Builder<IrcBot>> builders = new HashMap<>();
-    private final MultiBotManager<IrcBot> manager = new MultiBotManager<>();
+    private final Map<String, Builder<IRCBot>> builders = new HashMap<>();
+    private final MultiBotManager<IRCBot> manager = new MultiBotManager<>();
     @Inject private EventBus eventBus;
 
     @Inject
-    public PircBotXService(Config config, EventBus eventBus) {
+    public PircBotXClient(Config config, EventBus eventBus) {
         eventBus.register(this);
 
         Config irc = config.getConfig("irc");
 
-        Builder<IrcBot> base = new Configuration.Builder<IrcBot>()
+        Builder<IRCBot> base = new Configuration.Builder<IRCBot>()
                 .setVersion(irc.getString("version"))
                 .setAutoSplitMessage(true)
                 .setIdentServerEnabled(false)
@@ -63,7 +63,7 @@ public class PircBotXService implements Listener<IrcBot> {
         for (Config server : irc.getConfigList("servers")) {
             server = server.withFallback(irc.getConfig("default-server"));
 
-            Builder<IrcBot> builder = new Builder<>(base)
+            Builder<IRCBot> builder = new Builder<>(base)
                     .setServer(server.getString("host"), server.getInt("port"), server.getString("password"));
 
             builder
@@ -87,10 +87,10 @@ public class PircBotXService implements Listener<IrcBot> {
 
     @Subscribe
     public void onStartup(StartupEvent event) {
-        for (Map.Entry<String, Builder<IrcBot>> entry : builders.entrySet()) {
-            Builder<IrcBot> builder = entry.getValue();
+        for (Map.Entry<String, Builder<IRCBot>> entry : builders.entrySet()) {
+            Builder<IRCBot> builder = entry.getValue();
             builder.addListener(this);
-            manager.addBot(new IrcBot(builder.buildConfiguration(), entry.getKey()));
+            manager.addBot(new IRCBot(builder.buildConfiguration(), entry.getKey()));
         }
 
         Thread thread = new Thread(manager::start, "PircBotX");
@@ -108,7 +108,7 @@ public class PircBotXService implements Listener<IrcBot> {
     }
 
     @Override
-    public void onEvent(Event<IrcBot> event) throws Exception {
+    public void onEvent(Event<IRCBot> event) throws Exception {
         eventBus.post(event);
     }
 

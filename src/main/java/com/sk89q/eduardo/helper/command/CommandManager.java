@@ -27,9 +27,9 @@ import com.sk89q.eduardo.auth.AuthService;
 import com.sk89q.eduardo.auth.Subject;
 import com.sk89q.eduardo.event.CommandEvent;
 import com.sk89q.eduardo.helper.throttle.RateLimiter;
-import com.sk89q.eduardo.irc.IrcBot;
-import com.sk89q.eduardo.irc.IrcContext;
-import com.sk89q.eduardo.irc.IrcContexts;
+import com.sk89q.eduardo.Context;
+import com.sk89q.eduardo.Contexts;
+import com.sk89q.eduardo.irc.IRCBot;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.InvocationCommandException;
 import com.sk89q.intake.context.CommandContext;
@@ -75,7 +75,7 @@ public class CommandManager {
     }
 
     @Subscribe
-    public void onGenericMessage(GenericMessageEvent<IrcBot> event) {
+    public void onGenericMessage(GenericMessageEvent<IRCBot> event) {
         String message = event.getMessage();
         String prefix = config.getString("command.prefix");
         if (message.length() > prefix.length() && message.startsWith(prefix)) {
@@ -89,9 +89,9 @@ public class CommandManager {
 
                 if (split.length > 0 && dispatcher.contains(split[0])) {
                     CommandLocals locals = new CommandLocals();
-                    IrcContext context = IrcContexts.create(event);
+                    Context context = Contexts.create(event);
                     locals.put(GenericMessageEvent.class, event);
-                    locals.put(IrcContext.class, context);
+                    locals.put(Context.class, context);
                     locals.put(Subject.class, authService.login(context));
 
                     try {

@@ -20,10 +20,10 @@
 package com.sk89q.eduardo.auth;
 
 import com.sk89q.eduardo.irc.ChannelUserMode;
-import com.sk89q.eduardo.irc.IrcContext;
-import com.sk89q.eduardo.irc.Users;
-import com.sk89q.eduardo.util.FnMatch;
-import com.sk89q.eduardo.util.FnMatch.Flag;
+import com.sk89q.eduardo.Context;
+import com.sk89q.eduardo.util.irc.Users;
+import com.sk89q.eduardo.util.text.FnMatch;
+import com.sk89q.eduardo.util.text.FnMatch.Flag;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -33,7 +33,7 @@ import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ContextMatch implements Predicate<IrcContext> {
+public class ContextMatch implements Predicate<Context> {
 
     private final Set<String> users = new HashSet<>();
     private final Set<String> channels = new HashSet<>();
@@ -73,7 +73,7 @@ public class ContextMatch implements Predicate<IrcContext> {
     }
 
     @Override
-    public boolean test(IrcContext context) {
+    public boolean test(Context context) {
         if (!users.isEmpty()) {
             if (context.getUser() != null) {
                 boolean pass = false;

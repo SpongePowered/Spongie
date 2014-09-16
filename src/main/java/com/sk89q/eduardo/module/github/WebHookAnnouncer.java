@@ -29,10 +29,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sk89q.eduardo.helper.GenericBroadcast;
 import com.sk89q.eduardo.helper.shortener.URLShortener;
-import com.sk89q.eduardo.http.JettyService;
+import com.sk89q.eduardo.http.JettyServer;
 import com.sk89q.eduardo.http.handler.SimpleHandler;
 import com.sk89q.eduardo.http.handler.SimpleResponse;
-import com.sk89q.eduardo.irc.Users;
+import com.sk89q.eduardo.util.irc.Users;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import org.apache.commons.codec.binary.Hex;
@@ -77,7 +77,7 @@ public class WebHookAnnouncer extends ListenerAdapter<PircBotX> {
     @Inject private GenericBroadcast broadcast;
 
     @Inject
-    public WebHookAnnouncer(JettyService jetty, EventBus bus, Config config) {
+    public WebHookAnnouncer(JettyServer jetty, EventBus bus, Config config) {
         thisConfig = config.getConfig("github-webhook");
 
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

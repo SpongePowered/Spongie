@@ -21,7 +21,7 @@ package com.sk89q.eduardo.helper.command;
 
 import com.sk89q.eduardo.helper.throttle.RateLimit;
 import com.sk89q.eduardo.helper.throttle.RateLimiter;
-import com.sk89q.eduardo.irc.IrcContext;
+import com.sk89q.eduardo.Context;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.SettableDescription;
 import com.sk89q.intake.context.CommandContext;
@@ -60,7 +60,7 @@ public class RateLimitListener implements InvokeListener, InvokeHandler {
     public boolean preProcess(Object o, Method method, ParameterData[] data, CommandContext context, CommandLocals locals) throws CommandException, ParameterException {
         RateLimit limit = method.getAnnotation(RateLimit.class);
 
-        IrcContext callerContext = locals.get(IrcContext.class);
+        Context callerContext = locals.get(Context.class);
         if (callerContext == null) {
             log.warn("Tried to handle @RateLimit but Subject is not available while handling " + context.getCommand(),
                     new RuntimeException("Failed to get Subject from locals"));

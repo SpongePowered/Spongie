@@ -22,11 +22,11 @@ package com.sk89q.eduardo.irc;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 
-public class IrcBot extends PircBotX {
+public class IRCBot extends PircBotX {
 
     private final String id;
 
-    public IrcBot(Configuration<? extends PircBotX> configuration, String id) {
+    public IRCBot(Configuration<? extends PircBotX> configuration, String id) {
         super(configuration);
         this.id = id;
     }

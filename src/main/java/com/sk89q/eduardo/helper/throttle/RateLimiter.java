@@ -25,7 +25,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sk89q.eduardo.irc.IrcContext;
+import com.sk89q.eduardo.Context;
 import com.typesafe.config.Config;
 import org.isomorphism.util.TokenBucket;
 import org.isomorphism.util.TokenBuckets;
@@ -55,7 +55,7 @@ public class RateLimiter {
         perHost = createTokenBucketCache(HOST_BUCKET);
     }
 
-    public synchronized boolean tryConsume(IrcContext context, double tokens) {
+    public synchronized boolean tryConsume(Context context, double tokens) {
         long tokensLong = applyFactor(tokens);
 
         if (context.getUser() != null) {

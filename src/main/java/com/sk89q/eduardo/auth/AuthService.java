@@ -19,10 +19,10 @@
 
 package com.sk89q.eduardo.auth;
 
-import com.sk89q.eduardo.irc.IrcContext;
+import com.sk89q.eduardo.Context;
 
 public interface AuthService {
 
-    Subject login(IrcContext context);
+    Subject login(Context context);
 
 }

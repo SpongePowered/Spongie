@@ -17,8 +17,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.irc;
+package com.sk89q.eduardo;
 
+import com.sk89q.eduardo.irc.ChannelUserMode;
 import org.pircbotx.User;
 
 import javax.annotation.Nullable;
@@ -28,13 +29,13 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class IrcContext {
+public class Context {
 
     private final User user;
     @Nullable private final String channel;
     private final EnumSet<ChannelUserMode> modes;
 
-    public IrcContext(User user, @Nullable String channel, List<ChannelUserMode> modes) {
+    public Context(User user, @Nullable String channel, List<ChannelUserMode> modes) {
         checkNotNull(user);
         this.user = user;
         this.channel = channel;
@@ -45,7 +46,7 @@ public class IrcContext {
         }
     }
 
-    public IrcContext(User user, @Nullable String channel, ChannelUserMode... modes) {
+    public Context(User user, @Nullable String channel, ChannelUserMode... modes) {
         this(user, channel, Arrays.asList(modes));
     }
 

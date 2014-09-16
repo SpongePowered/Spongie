@@ -27,7 +27,7 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.sk89q.eduardo.event.ConfigureEvent;
 import com.sk89q.eduardo.event.StartupEvent;
-import com.sk89q.eduardo.util.SimpleLogFormatter;
+import com.sk89q.eduardo.util.logging.SimpleLogFormatter;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.pircbotx.exception.IrcException;

@@ -22,6 +22,7 @@ package com.sk89q.eduardo.http;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.sk89q.eduardo.event.StartupEvent;
 import com.typesafe.config.Config;
 import org.eclipse.jetty.server.Connector;
@@ -35,15 +36,16 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JettyService {
+@Singleton
+public class JettyServer {
 
-    private static final Logger log = LoggerFactory.getLogger(JettyService.class);
+    private static final Logger log = LoggerFactory.getLogger(JettyServer.class);
 
     private final Config config;
     private final List<Handler> handlers = new ArrayList<Handler>();
 
     @Inject
-    public JettyService(Config config, EventBus eventBus) {
+    public JettyServer(Config config, EventBus eventBus) {
         this.config = config;
         eventBus.register(this);
     }

@@ -17,8 +17,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.irc;
+package com.sk89q.eduardo;
 
+import com.sk89q.eduardo.Context;
+import com.sk89q.eduardo.irc.ChannelUserMode;
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
@@ -30,12 +32,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class IrcContexts {
+public final class Contexts {
 
-    private IrcContexts() {
+    private Contexts() {
     }
 
-    public static IrcContext create(GenericMessageEvent<? extends PircBotX> event) {
+    public static Context create(GenericMessageEvent<? extends PircBotX> event) {
         User user = event.getUser();
         @Nullable Channel channel;
         List<ChannelUserMode> modes = new ArrayList<>();
@@ -62,7 +64,7 @@ public final class IrcContexts {
             }
         }
 
-        return new IrcContext(user, channel != null ? channel.getName() : null, modes);
+        return new Context(user, channel != null ? channel.getName() : null, modes);
     }
 
 }
