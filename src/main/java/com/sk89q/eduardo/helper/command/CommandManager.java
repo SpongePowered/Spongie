@@ -26,6 +26,7 @@ import com.sk89q.eduardo.auth.AuthService;
 import com.sk89q.eduardo.auth.Subject;
 import com.sk89q.eduardo.event.CommandEvent;
 import com.sk89q.eduardo.helper.throttle.RateLimiter;
+import com.sk89q.eduardo.irc.IrcBot;
 import com.sk89q.eduardo.irc.IrcContext;
 import com.sk89q.eduardo.irc.IrcContexts;
 import com.sk89q.eduardo.irc.PircBotXService;
@@ -45,7 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-public class CommandManager extends ListenerAdapter<PircBotX> {
+public class CommandManager extends ListenerAdapter<IrcBot> {
 
     private static final Logger log = LoggerFactory.getLogger(CommandManager.class);
 
@@ -76,7 +77,7 @@ public class CommandManager extends ListenerAdapter<PircBotX> {
     }
 
     @Override
-    public void onGenericMessage(GenericMessageEvent<PircBotX> event) {
+    public void onGenericMessage(GenericMessageEvent<IrcBot> event) {
         String message = event.getMessage();
         String prefix = config.getString("command.prefix");
         if (message.length() > prefix.length() && message.startsWith(prefix)) {

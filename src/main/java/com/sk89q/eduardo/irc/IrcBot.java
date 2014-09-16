@@ -19,10 +19,20 @@
 
 package com.sk89q.eduardo.irc;
 
-import org.pircbotx.hooks.Listener;
+import org.pircbotx.Configuration;
+import org.pircbotx.PircBotX;
 
-public interface PircBotXService {
+public class IrcBot extends PircBotX {
 
-    void registerListener(Listener<IrcBot> listener);
+    private final String id;
+
+    public IrcBot(Configuration<? extends PircBotX> configuration, String id) {
+        super(configuration);
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
 
 }

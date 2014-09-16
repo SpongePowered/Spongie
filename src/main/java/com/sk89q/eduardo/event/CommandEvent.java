@@ -19,22 +19,22 @@
 
 package com.sk89q.eduardo.event;
 
-import org.pircbotx.PircBotX;
+import com.sk89q.eduardo.irc.IrcBot;
 import org.pircbotx.User;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
 public class CommandEvent implements Cancellable {
 
-    private final GenericMessageEvent<PircBotX> messageEvent;
+    private final GenericMessageEvent<IrcBot> messageEvent;
     private final String arguments;
     private boolean cancelled;
 
-    public CommandEvent(GenericMessageEvent<PircBotX> messageEvent, String arguments) {
+    public CommandEvent(GenericMessageEvent<IrcBot> messageEvent, String arguments) {
         this.messageEvent = messageEvent;
         this.arguments = arguments;
     }
 
-    public GenericMessageEvent<PircBotX> getMessageEvent() {
+    public GenericMessageEvent<IrcBot> getMessageEvent() {
         return messageEvent;
     }
 
