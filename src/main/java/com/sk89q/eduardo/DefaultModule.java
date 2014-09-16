@@ -23,6 +23,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.matcher.Matchers;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import org.slf4j.Logger;
@@ -46,6 +47,8 @@ public class DefaultModule extends AbstractModule {
     @SuppressWarnings("unchecked")
     @Override
     protected void configure() {
+        bindListener(Matchers.any(), new AutoRegisterListener());
+
         try {
             Config mapping = config.getConfig("services.mapping");
             for (Entry<String, ConfigValue> entry : mapping.entrySet()) {

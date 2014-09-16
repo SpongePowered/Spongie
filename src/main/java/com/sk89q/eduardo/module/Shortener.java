@@ -22,6 +22,7 @@ package com.sk89q.eduardo.module;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sk89q.eduardo.auth.Subject;
+import com.sk89q.eduardo.helper.AutoRegister;
 import com.sk89q.eduardo.helper.Response;
 import com.sk89q.eduardo.helper.command.CommandManager;
 import com.sk89q.eduardo.helper.throttle.RateLimit;
@@ -34,15 +35,11 @@ import com.sk89q.intake.parametric.annotation.Text;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@AutoRegister
 @Singleton
 public class Shortener {
 
     @Inject private URLShortener shortener;
-
-    @Inject
-    public Shortener(CommandManager processor) {
-        processor.registerCommands(this);
-    }
 
     @Command(aliases = {"shorten", "short", "shrt"}, desc = "Shorten a URL")
     @Require("shortener.shorten")

@@ -17,25 +17,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.module;
+package com.sk89q.eduardo.helper;
 
-import com.google.inject.Singleton;
-import com.sk89q.eduardo.auth.Subject;
-import com.sk89q.eduardo.helper.AutoRegister;
-import com.sk89q.eduardo.helper.Response;
-import com.sk89q.eduardo.helper.throttle.RateLimit;
-import com.sk89q.intake.Command;
-import com.sk89q.intake.Require;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@AutoRegister
-@Singleton
-public class PermissionTest {
-
-    @Command(aliases = "testperm", desc = "Test a permission")
-    @Require("permissions.test")
-    @RateLimit
-    public void testPermission(Subject subject, Response response, String permission) {
-        response.respond("evaluates to " + subject.testPermission(permission));
-    }
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface AutoRegister {
 }
