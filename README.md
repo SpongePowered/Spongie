@@ -51,6 +51,28 @@ public class Shortener {
 }
 ```
 
+### JDBC-based persistence with migration support
+
+* Support for automatic table migrations
+* Access data using jOOQ
+
+```java
+Bucket b = persistence.connect("alias");
+
+// Migration already performed and versioned
+
+try (Connection conn = b.createConnection()) {
+  DSLContext create = DSL.using(conn);
+
+  Result<Record> record = create.select()
+    .from(b.table("aliases"))
+    .where(field("alias").eq(alias.toLowerCase()))
+    .fetch();
+  
+  // etc.
+}
+```
+
 ### Powerful permissions
 
 ```perl
