@@ -60,16 +60,18 @@ public class RateLimitListener implements InvokeListener, InvokeHandler {
     public boolean preProcess(Object o, Method method, ParameterData[] data, CommandContext context, CommandLocals locals) throws CommandException, ParameterException {
         RateLimit limit = method.getAnnotation(RateLimit.class);
 
-        Context callerContext = locals.get(Context.class);
-        if (callerContext == null) {
-            log.warn("Tried to handle @RateLimit but Subject is not available while handling " + context.getCommand(),
-                    new RuntimeException("Failed to get Subject from locals"));
-            return false;
-        }
+        if (limit != null) {
+            Context callerContext = locals.get(Context.class);
+            if (callerContext == null) {
+                log.warn("Tried to handle @RateLimit but Subject is not available while handling " + context.getCommand(),
+                        new RuntimeException("Failed to get Subject from locals"));
+                return false;
+            }
 
-        if (!limiter.tryConsume(callerContext, limit.weight())) {
-            log.info("Command usage was rate limited ({})", callerContext);
-            return false;
+            if (!limiter.tryConsume(callerContext, limit.weight())) {
+                log.info("Command usage was rate limited ({})", callerContext);
+                return false;
+            }
         }
 
         return true;
