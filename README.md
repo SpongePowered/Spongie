@@ -10,6 +10,35 @@ Eduardo is an IRC bot (+ framework).
 Features
 --------
 
+### Easily-registered commands
+
+* Support for checking ermissions
+* Support for rate limiting per-host mask, per-channel, and globally
+
+```java
+@AutoRegister public class HelloWorld {
+  @Command(aliases = "hello", desc = "Say hello back")
+  public void helloWorld(Response response) {
+    response.respond("Hello world!")
+  }
+}
+```
+
+### Easily-registered web front end
+
+* Powered by a Sintara-inspired API (via the Spark library)
+* Support for static files
+* Support for the Mustache templating engine
+
+```java
+@AutoRegister public class HelloWorld {
+  @Subscribe public void onConfigureRoute(ConfigureRouteEvent event) {
+    get("/hello/", (req, resp) -> "Hello World!");
+  }
+}
+
+```
+
 ### IoC-powered
 
 ```java
@@ -18,17 +47,6 @@ public class Shortener {
 
   public void doSomething() {
     URL shortened = shortener.shorten(...);
-  }
-}
-```
-
-### Simple commands
-
-```java
-@AutoRegister public class HelloWorld {
-  @Command(aliases = "hello", desc = "Say hello back")
-  public void helloWorld(Response response) {
-    response.respond("Hello world!")
   }
 }
 ```
@@ -92,17 +110,6 @@ irc = {
     }
   ]
 }
-```
-
-### Web-accessible
-
-```java
-@AutoRegister public class HelloWorld {
-  @Subscribe public void onConfigureRoute(ConfigureRouteEvent event) {
-    get("/hello/", (req, resp) -> "Hello World!");
-  }
-}
-
 ```
 
 Compiling
