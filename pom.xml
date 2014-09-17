@@ -80,13 +80,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-server</artifactId>
-      <version>8.1.9.v20130131</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
       <groupId>com.typesafe</groupId>
       <artifactId>config</artifactId>
       <version>1.2.1</version>
@@ -117,6 +110,18 @@
       <groupId>com.rosaloves</groupId>
       <artifactId>bitlyj</artifactId>
       <version>2.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-core</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-template-mustache</artifactId>
+      <version>1.0.0</version>
     </dependency>
 
     <dependency>

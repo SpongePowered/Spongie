@@ -14,23 +14,22 @@ Features
 
 ```java
 public class Shortener {
-    @Inject private URLShortener shortener;
+  @Inject private URLShortener shortener;
 
-	public void doSomething() {
-		URL shortened = shortener.shorten(...);
-	}
+  public void doSomething() {
+    URL shortened = shortener.shorten(...);
+  }
 }
 ```
 
 ### Simple commands
 
 ```java
-@AutoRegister
-public class HelloWorld {
-    @Command(aliases = "hello", desc = "Say hello back")
-    public void helloWorld(Response response) {
-        response.respond("Hello world!")
-    }
+@AutoRegister public class HelloWorld {
+  @Command(aliases = "hello", desc = "Say hello back")
+  public void helloWorld(Response response) {
+    response.respond("Hello world!")
+  }
 }
 ```
 
@@ -98,20 +97,12 @@ irc = {
 ### Web-accessible
 
 ```java
-public class HelloWorld extends SimpleHandler {
-    @Inject
-    public HelloWorld(JettyServer jetty) {
-        ContextHandler handler = new ContextHandler("/hello");
-        handler.setHandler(this);
-        jetty.registerHandler(handler);
-    }
-
-    @Override
-    public SimpleResponse respond(String target, Request baseRequest, 
-                                  HttpServletRequest request, HttpServletResponse response) {
-        return create().body("Hello wolrd!");
-    }
+@AutoRegister public class HelloWorld {
+  @Subscribe public void onConfigureRoute(ConfigureRouteEvent event) {
+    get("/hello/", (req, resp) -> "Hello World!");
+  }
 }
+
 ```
 
 Compiling

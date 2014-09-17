@@ -19,8 +19,8 @@
 
 package com.sk89q.eduardo.helper.command;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
+import com.sk89q.eduardo.util.eventbus.EventBus;
+import com.sk89q.eduardo.util.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sk89q.eduardo.auth.AuthService;

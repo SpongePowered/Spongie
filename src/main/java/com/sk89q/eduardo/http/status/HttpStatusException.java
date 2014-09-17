@@ -17,20 +17,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.helper;
+package com.sk89q.eduardo.http.status;
 
-import com.sk89q.eduardo.util.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.sk89q.eduardo.event.BroadcastEvent;
+public class HttpStatusException extends RuntimeException {
 
-@Singleton
-public class GenericBroadcast {
+    private final int code;
 
-    @Inject private EventBus eventBus;
+    public HttpStatusException(int code) {
+        this.code = code;
+    }
 
-    public void broadcast(String target, String message) {
-        eventBus.post(new BroadcastEvent(target, message));
+    public HttpStatusException(int code, String message) {
+        super(message);
+        this.code = code;
+    }
+
+    public HttpStatusException(int code, String message, Throwable cause) {
+        super(message, cause);
+        this.code = code;
+    }
+
+    public HttpStatusException(int code, Throwable cause) {
+        super(cause);
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
     }
 
 }

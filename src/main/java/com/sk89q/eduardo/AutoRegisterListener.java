@@ -19,7 +19,7 @@
 
 package com.sk89q.eduardo;
 
-import com.google.common.eventbus.EventBus;
+import com.sk89q.eduardo.util.eventbus.EventBus;
 import com.google.inject.TypeLiteral;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;

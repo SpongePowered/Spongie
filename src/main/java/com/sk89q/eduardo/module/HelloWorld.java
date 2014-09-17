@@ -19,35 +19,19 @@
 
 package com.sk89q.eduardo.module;
 
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
+import com.sk89q.eduardo.util.eventbus.Subscribe;
 import com.google.inject.Singleton;
+import com.sk89q.eduardo.event.http.ConfigureRouteEvent;
+import com.sk89q.eduardo.helper.AutoRegister;
 import com.sk89q.eduardo.helper.Response;
-import com.sk89q.eduardo.helper.command.CommandManager;
 import com.sk89q.eduardo.helper.throttle.RateLimit;
-import com.sk89q.eduardo.http.JettyServer;
 import com.sk89q.intake.Command;
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.eclipse.jetty.server.handler.ContextHandler;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import static spark.Spark.get;
 
 @Singleton
+@AutoRegister
 public class HelloWorld {
-
-    @Inject
-    public HelloWorld(CommandManager commands, JettyServer jetty, EventBus bus) {
-        commands.registerCommands(this);
-        bus.register(this);
-
-        ContextHandler testHandler = new ContextHandler("/hello");
-        testHandler.setHandler(new HelloWorldHandler());
-        jetty.registerHandler(testHandler);
-    }
 
     @Command(aliases = "hello", desc = "Hello world!")
     @RateLimit
@@ -55,14 +39,9 @@ public class HelloWorld {
         response.respond("Hello world!");
     }
 
-    private class HelloWorldHandler extends AbstractHandler {
-        @Override
-        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-            response.setContentType("text/html; charset=utf-8");
-            response.setStatus(HttpServletResponse.SC_OK);
-            baseRequest.setHandled(true);
-            response.getWriter().println("<h1>Hello World</h1>");
-        }
+    @Subscribe
+    public void onConfigureRoute(ConfigureRouteEvent event) {
+        get("/hello/", (req, resp) -> "Hello World!");
     }
 
 }

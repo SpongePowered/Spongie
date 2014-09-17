@@ -20,7 +20,7 @@
 package com.sk89q.eduardo;
 
 import com.beust.jcommander.JCommander;
-import com.google.common.eventbus.EventBus;
+import com.sk89q.eduardo.util.eventbus.EventBus;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;

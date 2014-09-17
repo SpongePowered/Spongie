@@ -17,20 +17,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.helper;
+package com.sk89q.eduardo.http.status;
 
-import com.sk89q.eduardo.util.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.sk89q.eduardo.event.BroadcastEvent;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
-@Singleton
-public class GenericBroadcast {
+public class BadRequestError extends HttpStatusException {
 
-    @Inject private EventBus eventBus;
+    public BadRequestError() {
+        super(SC_BAD_REQUEST);
+    }
 
-    public void broadcast(String target, String message) {
-        eventBus.post(new BroadcastEvent(target, message));
+    public BadRequestError(String message) {
+        super(SC_BAD_REQUEST, message);
+    }
+
+    public BadRequestError(String message, Throwable cause) {
+        super(SC_BAD_REQUEST, message, cause);
+    }
+
+    public BadRequestError(Throwable cause) {
+        super(SC_BAD_REQUEST, cause);
     }
 
 }

@@ -19,62 +19,43 @@
 
 package com.sk89q.eduardo.http;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sk89q.eduardo.event.StartupEvent;
+import com.sk89q.eduardo.event.http.ConfigureRouteEvent;
+import com.sk89q.eduardo.helper.AutoRegister;
+import com.sk89q.eduardo.http.status.HttpStatusException;
+import com.sk89q.eduardo.util.eventbus.EventBus;
+import com.sk89q.eduardo.util.eventbus.Subscribe;
 import com.typesafe.config.Config;
-import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.UnknownHostException;
 
+import static com.google.common.collect.ImmutableMap.of;
+import static com.sk89q.eduardo.http.SparkUtils.*;
+import static spark.Spark.*;
+
+@AutoRegister
 @Singleton
 public class JettyServer {
 
-    private static final Logger log = LoggerFactory.getLogger(JettyServer.class);
-
-    private final Config config;
-    private final List<Handler> handlers = new ArrayList<Handler>();
-
-    @Inject
-    public JettyServer(Config config, EventBus eventBus) {
-        this.config = config;
-        eventBus.register(this);
-    }
+    @Inject private Config config;
+    @Inject private EventBus eventBus;
 
     @Subscribe
-    public void onStartup(StartupEvent event) {
-        Server server = new Server();
+    public void onStartup(StartupEvent event) throws UnknownHostException {
+        setIpAddress(config.getString("http.bind_address"));
+        setPort(config.getInt("http.port"));
 
-        SelectChannelConnector connector = new SelectChannelConnector();
-        connector.setHost(config.getString("http.bind_address"));
-        connector.setPort(config.getInt("http.port"));
-        server.setConnectors(new Connector[] { connector });
+        staticFileLocation("/public");
 
-        ContextHandlerCollection contexts = new ContextHandlerCollection();
-        Handler[] handlersArr = new Handler[handlers.size()];
-        handlers.toArray(handlersArr);
-        contexts.setHandlers(handlersArr);
-        server.setHandler(contexts);
+        eventBus.post(new ConfigureRouteEvent());
 
-        try {
-            server.start();
-        } catch (Exception e) {
-            log.info("Failed to start server", e);
-        }
+        exception(HttpStatusException.class, (e, request, response) -> {
+            response.status(((HttpStatusException) e).getCode());
+            response.body(render(of("error", e.getMessage()), "error.mustache"));
+        });
+
     }
-
-    public void registerHandler(Handler handler) {
-        handlers.add(handler);
-    }
-
 
 }

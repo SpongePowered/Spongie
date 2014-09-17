@@ -17,20 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.helper;
+package com.sk89q.eduardo.event.http;
 
-import com.sk89q.eduardo.util.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.sk89q.eduardo.event.BroadcastEvent;
-
-@Singleton
-public class GenericBroadcast {
-
-    @Inject private EventBus eventBus;
-
-    public void broadcast(String target, String message) {
-        eventBus.post(new BroadcastEvent(target, message));
-    }
-
+public class ConfigureRouteEvent {
 }

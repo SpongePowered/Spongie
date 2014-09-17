@@ -23,31 +23,28 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.eventbus.EventBus;
 import com.google.common.io.ByteStreams;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sk89q.eduardo.event.http.ConfigureRouteEvent;
+import com.sk89q.eduardo.helper.AutoRegister;
 import com.sk89q.eduardo.helper.GenericBroadcast;
 import com.sk89q.eduardo.helper.shortener.URLShortener;
-import com.sk89q.eduardo.http.JettyServer;
-import com.sk89q.eduardo.http.handler.SimpleHandler;
-import com.sk89q.eduardo.http.handler.SimpleResponse;
+import com.sk89q.eduardo.http.status.BadRequestError;
+import com.sk89q.eduardo.http.status.InternalServerError;
+import com.sk89q.eduardo.util.eventbus.Subscribe;
 import com.sk89q.eduardo.util.irc.Users;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import org.apache.commons.codec.binary.Hex;
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.ContextHandler;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -56,10 +53,9 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.sk89q.eduardo.http.handler.SimpleResponse.create;
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static spark.Spark.*;
 
+@AutoRegister
 @Singleton
 public class WebHookAnnouncer extends ListenerAdapter<PircBotX> {
 
@@ -77,7 +73,7 @@ public class WebHookAnnouncer extends ListenerAdapter<PircBotX> {
     @Inject private GenericBroadcast broadcast;
 
     @Inject
-    public WebHookAnnouncer(JettyServer jetty, EventBus bus, Config config) {
+    public WebHookAnnouncer(Config config) {
         thisConfig = config.getConfig("github-webhook");
 
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -89,23 +85,45 @@ public class WebHookAnnouncer extends ListenerAdapter<PircBotX> {
             // TODO: Does this actually work properly?
             this.targets.putAll(projectName.toLowerCase(), targets.getStringList(projectName));
         }
-
-        //bot.registerListener(this);
-        bus.register(this);
-
-        ContextHandler hookHandler = new ContextHandler("/github-webhook");
-        hookHandler.setHandler(new WebHookHandler());
-        jetty.registerHandler(hookHandler);
     }
 
-    private boolean verifySignature(String signature, byte[] content) {
+    @Subscribe
+    public void onConfigureRoute(ConfigureRouteEvent event) {
+        post("/github/webhook/", (request, response) -> {
+            try {
+                String signature = request.headers("X-Hub-Signature");
+                String type = request.headers("X-GitHub-Event");
+                byte[] data = ByteStreams.toByteArray(request.raw().getInputStream());
+
+                if (verifySignature(signature, data)) {
+                    try {
+                        handlePayload(type, data);
+                        return "OK";
+                    } catch (IOException e) {
+                        log.warn("Failed to process GitHub webhook", e);
+                        throw new InternalServerError("Encountered an error processing the payload", e);
+                    }
+                } else {
+                    throw new BadRequestError("Invalid signature!");
+                }
+            } catch (IOException e) {
+                throw new InternalServerError("Failed to read input stream", e);
+            }
+        });
+    }
+
+    private boolean verifySignature(@Nullable String signature, byte[] content) {
+        if (signature == null) {
+            return false;
+        }
+
         Matcher matcher = SIGNATURE_PATTERN.matcher(signature);
 
         if (matcher.matches()) {
             String type = matcher.group(1);
 
             if (type.equalsIgnoreCase("sha1")) {
-                String key = thisConfig.getString("secret_key");
+                String key = thisConfig.getString("secret-key");
 
                 try {
                     SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(), HMAC_SHA1_ALGORITHM);
@@ -166,31 +184,6 @@ public class WebHookAnnouncer extends ListenerAdapter<PircBotX> {
         Collection<String> t = targets.get(project.toLowerCase());
         for (String target : t) {
             broadcast.broadcast(target, message);
-        }
-    }
-
-    private class WebHookHandler extends SimpleHandler {
-        @Override
-        public SimpleResponse respond(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-            String signature = request.getHeader("X-Hub-Signature");
-            String event = request.getHeader("X-GitHub-Event");
-            byte[] data = ByteStreams.toByteArray(request.getInputStream());
-
-            if (verifySignature(signature, data)) {
-                try {
-                    handlePayload(event, data);
-                    return create().body("OK");
-                } catch (IOException e) {
-                    log.warn("Failed to process GitHub webhook", e);
-                    return create()
-                            .response(SC_INTERNAL_SERVER_ERROR)
-                            .body("Encountered an error processing the payload");
-                }
-            } else {
-                return create()
-                        .response(SC_BAD_REQUEST)
-                        .body("Invalid signature");
-            }
         }
     }
 

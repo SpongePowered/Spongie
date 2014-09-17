@@ -17,20 +17,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.helper;
+package com.sk89q.eduardo.http.status;
 
-import com.sk89q.eduardo.util.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.sk89q.eduardo.event.BroadcastEvent;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
-@Singleton
-public class GenericBroadcast {
+public class InternalServerError extends HttpStatusException {
 
-    @Inject private EventBus eventBus;
+    public InternalServerError() {
+        super(SC_INTERNAL_SERVER_ERROR);
+    }
 
-    public void broadcast(String target, String message) {
-        eventBus.post(new BroadcastEvent(target, message));
+    public InternalServerError(String message) {
+        super(SC_INTERNAL_SERVER_ERROR, message);
+    }
+
+    public InternalServerError(String message, Throwable cause) {
+        super(SC_INTERNAL_SERVER_ERROR, message, cause);
+    }
+
+    public InternalServerError(Throwable cause) {
+        super(SC_INTERNAL_SERVER_ERROR, cause);
     }
 
 }

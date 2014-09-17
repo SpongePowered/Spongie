@@ -17,20 +17,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.helper;
+package com.sk89q.eduardo.http;
 
-import com.sk89q.eduardo.util.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.sk89q.eduardo.event.BroadcastEvent;
+import spark.ModelAndView;
+import spark.template.mustache.MustacheTemplateEngine;
 
-@Singleton
-public class GenericBroadcast {
+import java.util.Map;
 
-    @Inject private EventBus eventBus;
+public final class SparkUtils {
 
-    public void broadcast(String target, String message) {
-        eventBus.post(new BroadcastEvent(target, message));
+    private static final MustacheTemplateEngine mustacheEngine = new MustacheTemplateEngine();
+
+    private SparkUtils() {
+    }
+
+    public static String render(Map<Object, Object> map, String path) {
+        return mustacheEngine.render(new ModelAndView(map, "error.mustache"));
     }
 
 }

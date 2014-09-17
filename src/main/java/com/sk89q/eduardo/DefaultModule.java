@@ -19,7 +19,7 @@
 
 package com.sk89q.eduardo;
 
-import com.google.common.eventbus.EventBus;
+import com.sk89q.eduardo.util.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
