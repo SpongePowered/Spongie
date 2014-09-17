@@ -126,3 +126,4 @@ gradle-app.setting
 /*.conf
 !/example.conf
 /dependency-reduced-pom.xml
+/data
