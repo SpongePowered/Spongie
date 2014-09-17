@@ -19,17 +19,19 @@
 
 package com.sk89q.eduardo.helper.command;
 
-import com.sk89q.eduardo.util.eventbus.EventBus;
-import com.sk89q.eduardo.util.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sk89q.eduardo.Context;
+import com.sk89q.eduardo.Contexts;
 import com.sk89q.eduardo.auth.AuthService;
 import com.sk89q.eduardo.auth.Subject;
 import com.sk89q.eduardo.event.CommandEvent;
+import com.sk89q.eduardo.helper.Response;
 import com.sk89q.eduardo.helper.throttle.RateLimiter;
-import com.sk89q.eduardo.Context;
-import com.sk89q.eduardo.Contexts;
 import com.sk89q.eduardo.irc.IRCBot;
+import com.sk89q.eduardo.util.eventbus.EventBus;
+import com.sk89q.eduardo.util.eventbus.EventHandler.Priority;
+import com.sk89q.eduardo.util.eventbus.Subscribe;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.InvocationCommandException;
 import com.sk89q.intake.context.CommandContext;
@@ -39,6 +41,7 @@ import com.sk89q.intake.dispatcher.SimpleDispatcher;
 import com.sk89q.intake.parametric.ParametricBuilder;
 import com.sk89q.intake.util.auth.AuthorizationException;
 import com.typesafe.config.Config;
+import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +50,7 @@ import org.slf4j.LoggerFactory;
 public class CommandManager {
 
     private static final Logger log = LoggerFactory.getLogger(CommandManager.class);
+    private static final int MAX_DEPTH = 10;
 
     private final EventBus eventBus;
     @Inject private Config config;
@@ -74,37 +78,80 @@ public class CommandManager {
         builder.registerMethodsAsCommands(dispatcher, object);
     }
 
+    public String removePrefix(String arguments) {
+        String prefix = config.getString("command.prefix");
+
+        if (arguments.startsWith(prefix)) {
+            return arguments.substring(prefix.length());
+        } else {
+            return arguments;
+        }
+    }
+
+    @Subscribe(priority = Priority.VERY_EARLY, ignoreCancelled = true)
+    public void handleCommandRecursion(CommandEvent event) {
+        if (event.getDepth() >= MAX_DEPTH) {
+            event.getResponse().respond("error: Commands have reached the maximum recursion limit");
+            event.setCancelled(true);
+        }
+    }
+
+    @Subscribe(ignoreCancelled = true)
+    public void onCommand(CommandEvent event) {
+        String[] split = CommandContext.split(event.getArguments());
+
+        if (split.length > 0 && dispatcher.contains(split[0])) {
+            CommandLocals locals = new CommandLocals();
+            Context context = event.getPrimaryContext();
+            locals.put(CommandEvent.class, event);
+            locals.put(Response.class, event.getResponse());
+            locals.put(Context.class, context);
+            locals.put(Subject.class, authService.login(event.getContexts()));
+
+            event.setCancelled(true);
+
+            try {
+                dispatcher.call(event.getArguments(), locals, new String[0]);
+            } catch (InvocationCommandException e) {
+                log.warn("Failed to execute a command", e);
+                event.getResponse().respond("An unexpected error occurred while executing the command");
+            } catch (CommandException e) {
+                event.getResponse().respond("error: " + e.getMessage());
+            } catch (AuthorizationException ignored) {
+                log.info("User was not permitted to run !" + event.getArguments());
+            }
+        }
+    }
+
     @Subscribe
     public void onGenericMessage(GenericMessageEvent<IRCBot> event) {
         String message = event.getMessage();
         String prefix = config.getString("command.prefix");
+
         if (message.length() > prefix.length() && message.startsWith(prefix)) {
             String arguments = message.substring(prefix.length());
+            eventBus.post(new CommandEvent(Contexts.create(event), arguments, new ResponseImpl(event)));
+        }
+    }
 
-            CommandEvent commandEvent = new CommandEvent(event, arguments);
-            eventBus.post(commandEvent);
+    private static class ResponseImpl implements Response {
+        private final GenericMessageEvent<?> event;
 
-            if (!commandEvent.isCancelled()) {
-                String[] split = CommandContext.split(arguments);
+        private ResponseImpl(GenericMessageEvent<?> event) {
+            this.event = event;
+        }
 
-                if (split.length > 0 && dispatcher.contains(split[0])) {
-                    CommandLocals locals = new CommandLocals();
-                    Context context = Contexts.create(event);
-                    locals.put(GenericMessageEvent.class, event);
-                    locals.put(Context.class, context);
-                    locals.put(Subject.class, authService.login(context));
+        @Override
+        public void respond(String message) {
+            event.respond(message);
+        }
 
-                    try {
-                        dispatcher.call(arguments, locals, new String[0]);
-                    } catch (InvocationCommandException e) {
-                        log.warn("Failed to execute a command", e);
-                        event.respond("An unexpected error occurred while executing the command");
-                    } catch (CommandException e) {
-                        event.respond("error: " + e.getMessage());
-                    } catch (AuthorizationException ignored) {
-                        log.info("User was not permitted to run !" + arguments);
-                    }
-                }
+        @Override
+        public void broadcast(String message) {
+            if (event instanceof MessageEvent) {
+                ((MessageEvent) event).getChannel().send().message(message);
+            } else {
+                event.respond(message);
             }
         }
     }

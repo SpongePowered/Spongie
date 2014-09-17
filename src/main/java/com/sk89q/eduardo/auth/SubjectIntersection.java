@@ -17,23 +17,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.helper;
+package com.sk89q.eduardo.auth;
 
-import com.sk89q.eduardo.util.formatting.IRCColorBuilder;
-import com.sk89q.eduardo.util.formatting.StyledFragment;
+import java.util.List;
 
-public interface Response {
+class SubjectIntersection implements Subject {
 
-    void respond(String message);
+    private final List<Subject> subjects;
 
-    void broadcast(String message);
-
-    default void respond(StyledFragment fragment) {
-        respond(IRCColorBuilder.asColorCodes(fragment));
+    SubjectIntersection(List<Subject> subjects) {
+        this.subjects = subjects;
     }
 
-    default void broadcast(StyledFragment fragment) {
-        broadcast(IRCColorBuilder.asColorCodes(fragment));
+    @Override
+    public boolean testPermission(String permission) {
+        boolean pass = false;
+
+        for (Subject subject : subjects) {
+            if (subject.testPermission(permission)) {
+                pass = true;
+            } else {
+                return false;
+            }
+        }
+
+        return pass;
     }
-    
+
 }

@@ -19,9 +19,8 @@
 
 package com.sk89q.eduardo.auth;
 
-import com.sk89q.eduardo.irc.ChannelUserMode;
 import com.sk89q.eduardo.Context;
-import com.sk89q.eduardo.util.irc.Users;
+import com.sk89q.eduardo.irc.ChannelUserMode;
 import com.sk89q.eduardo.util.text.FnMatch;
 import com.sk89q.eduardo.util.text.FnMatch.Flag;
 
@@ -78,7 +77,7 @@ public class ContextMatch implements Predicate<Context> {
             if (context.getUser() != null) {
                 boolean pass = false;
                 for (String pattern : users) {
-                    if (FnMatch.fnmatch(pattern, Users.getUserMask(context.getUser()), EnumSet.of(Flag.CASEFOLD))) {
+                    if (FnMatch.fnmatch(pattern, context.getUser(), EnumSet.of(Flag.CASEFOLD))) {
                         pass = true;
                         break;
                     }

@@ -19,21 +19,40 @@
 
 package com.sk89q.eduardo.helper.command;
 
+import com.sk89q.eduardo.Context;
 import com.sk89q.eduardo.auth.Subject;
+import com.sk89q.eduardo.event.CommandEvent;
 import com.sk89q.eduardo.helper.Response;
 import com.sk89q.intake.parametric.ParameterException;
 import com.sk89q.intake.parametric.argument.ArgumentStack;
 import com.sk89q.intake.parametric.binding.BindingBehavior;
 import com.sk89q.intake.parametric.binding.BindingHelper;
 import com.sk89q.intake.parametric.binding.BindingMatch;
-import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.types.GenericMessageEvent;
 
 public class DefaultBinding extends BindingHelper {
 
-    @BindingMatch(type = Subject.class,
-                  behavior = BindingBehavior.PROVIDES,
-                  consumedCount = -1)
+    @BindingMatch(type = CommandEvent.class, behavior = BindingBehavior.PROVIDES, consumedCount = -1)
+    public CommandEvent getCommandEvent(ArgumentStack context) throws ParameterException {
+        CommandEvent event = context.getContext().getLocals().get(CommandEvent.class);
+        context.markConsumed();
+        if (event == null) {
+            throw new ParameterException("Uh oh! The CommandEvent is not known.");
+        } else {
+            return event;
+        }
+    }
+
+    @BindingMatch(type = Context.class, behavior = BindingBehavior.PROVIDES, consumedCount = -1)
+    public Context getContext(ArgumentStack context) throws ParameterException {
+        Context c = context.getContext().getLocals().get(Context.class);
+        if (c == null) {
+            throw new ParameterException("Uh oh! The Context is not known.");
+        } else {
+            return c;
+        }
+    }
+
+    @BindingMatch(type = Subject.class, behavior = BindingBehavior.PROVIDES, consumedCount = -1)
     public Subject getSubject(ArgumentStack context) throws ParameterException {
         Subject subject = context.getContext().getLocals().get(Subject.class);
         if (subject == null) {
@@ -43,35 +62,13 @@ public class DefaultBinding extends BindingHelper {
         }
     }
 
-    @BindingMatch(type = GenericMessageEvent.class,
-            behavior = BindingBehavior.PROVIDES,
-            consumedCount = -1)
-    public GenericMessageEvent getMessageEvent(ArgumentStack context) throws ParameterException {
-        GenericMessageEvent event = context.getContext().getLocals().get(GenericMessageEvent.class);
-        if (event == null) {
-            throw new ParameterException("Uh oh! The GenericMessageEvent is not known.");
-        } else {
-            return event;
-        }
-    }
-
-    @BindingMatch(type = PircBotX.class,
-            behavior = BindingBehavior.PROVIDES,
-            consumedCount = -1)
-    public PircBotX getBot(ArgumentStack context) throws ParameterException {
-        GenericMessageEvent event = getMessageEvent(context);
-        return event.getBot();
-    }
-
-    @BindingMatch(type = Response.class,
-            behavior = BindingBehavior.PROVIDES,
-            consumedCount = -1)
+    @BindingMatch(type = Response.class, behavior = BindingBehavior.PROVIDES, consumedCount = -1)
     public Response getResponse(ArgumentStack context) throws ParameterException {
-        GenericMessageEvent event = context.getContext().getLocals().get(GenericMessageEvent.class);
-        if (event == null) {
-            throw new ParameterException("Uh oh! The GenericMessageEvent is not known.");
+        Response response = context.getContext().getLocals().get(Response.class);
+        if (response == null) {
+            throw new ParameterException("Uh oh! The Response is not known.");
         } else {
-            return event::respond;
+            return response;
         }
     }
 

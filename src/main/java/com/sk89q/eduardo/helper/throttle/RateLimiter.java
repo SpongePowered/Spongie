@@ -59,7 +59,7 @@ public class RateLimiter {
         long tokensLong = applyFactor(tokens);
 
         if (context.getUser() != null) {
-            TokenBucket bucket = perHost.getUnchecked(context.getUser().getHostmask());
+            TokenBucket bucket = perHost.getUnchecked(context.getUser());
             if (!bucket.tryConsume(tokensLong)) {
                 return false;
             }

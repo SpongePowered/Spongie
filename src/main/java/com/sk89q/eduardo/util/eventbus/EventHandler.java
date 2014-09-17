@@ -19,6 +19,8 @@
 
 package com.sk89q.eduardo.util.eventbus;
 
+import com.sk89q.eduardo.event.Cancellable;
+
 import java.lang.reflect.InvocationTargetException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,14 +42,17 @@ public abstract class EventHandler implements Comparable<EventHandler> {
     }
 
     private final Priority priority;
+    private final boolean ignoreCancelled;
 
     /**
      * Create a new event handler.
      *
      * @param priority the priority
+     * @param ignoreCancelled true to ignore cancelled events
      */
-    protected EventHandler(Priority priority) {
+    protected EventHandler(Priority priority, boolean ignoreCancelled) {
         checkNotNull(priority);
+        this.ignoreCancelled = ignoreCancelled;
         this.priority = priority;
     }
 
@@ -69,6 +74,10 @@ public abstract class EventHandler implements Comparable<EventHandler> {
      * @throws InvocationTargetException thrown if an exception is thrown during dispatch
      */
     public final void handleEvent(Object event) throws InvocationTargetException {
+        if (ignoreCancelled && event instanceof Cancellable && ((Cancellable) event).isCancelled()) {
+            return;
+        }
+
         try {
             dispatch(event);
         } catch (Throwable t) {

@@ -20,38 +20,23 @@
 package com.sk89q.eduardo;
 
 import com.sk89q.eduardo.irc.ChannelUserMode;
-import org.pircbotx.User;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Context {
 
-    private final User user;
-    @Nullable private final String channel;
-    private final EnumSet<ChannelUserMode> modes;
+    private String network;
+    private String user;
+    @Nullable private String channel;
+    private EnumSet<ChannelUserMode> modes = EnumSet.noneOf(ChannelUserMode.class);
 
-    public Context(User user, @Nullable String channel, List<ChannelUserMode> modes) {
-        checkNotNull(user);
-        this.user = user;
-        this.channel = channel;
-        if (modes.size() > 0) {
-            this.modes = EnumSet.copyOf(modes);
-        } else {
-            this.modes = EnumSet.noneOf(ChannelUserMode.class);
-        }
+    public String getNetwork() {
+        return network;
     }
 
-    public Context(User user, @Nullable String channel, ChannelUserMode... modes) {
-        this(user, channel, Arrays.asList(modes));
-    }
-
-    public User getUser() {
-        return user;
+    public void setNetwork(String network) {
+        this.network = network;
     }
 
     @Nullable
@@ -59,16 +44,59 @@ public class Context {
         return channel;
     }
 
+    public void setChannel(@Nullable String channel) {
+        this.channel = channel;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
     public EnumSet<ChannelUserMode> getModes() {
         return modes;
     }
 
+    public void setModes(EnumSet<ChannelUserMode> modes) {
+        this.modes = modes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Context context = (Context) o;
+
+        if (channel != null ? !channel.equals(context.channel) : context.channel != null)
+            return false;
+        if (!modes.equals(context.modes)) return false;
+        if (!network.equals(context.network)) return false;
+        if (!user.equals(context.user)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = network.hashCode();
+        result = 31 * result + user.hashCode();
+        result = 31 * result + (channel != null ? channel.hashCode() : 0);
+        result = 31 * result + modes.hashCode();
+        return result;
+    }
+
     @Override
     public String toString() {
-        return "IrcContext{" +
-                "user=" + user +
+        return "Context{" +
+                "network='" + network + '\'' +
+                ", user=" + user +
                 ", channel='" + channel + '\'' +
                 ", modes=" + modes +
                 '}';
     }
+
 }

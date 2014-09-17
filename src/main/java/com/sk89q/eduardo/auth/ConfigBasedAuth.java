@@ -21,12 +21,13 @@ package com.sk89q.eduardo.auth;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sk89q.eduardo.Context;
 import com.sk89q.eduardo.auth.policy.MultiMapPolicy;
 import com.sk89q.eduardo.auth.policy.Policy;
 import com.sk89q.eduardo.irc.ChannelUserMode;
-import com.sk89q.eduardo.Context;
 import com.typesafe.config.Config;
 
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -62,8 +63,11 @@ public class ConfigBasedAuth implements AuthService {
     }
 
     @Override
-    public Subject login(Context context) {
-        return new ConfigSubject(context);
+    public Subject login(Collection<Context> contexts) {
+        return new SubjectIntersection(
+                contexts.stream()
+                        .map(ConfigSubject::new)
+                        .collect(Collectors.toList()));
     }
 
     private class ConfigSubject implements Subject {

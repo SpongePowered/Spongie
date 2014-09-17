@@ -19,39 +19,58 @@
 
 package com.sk89q.eduardo.event;
 
-import com.sk89q.eduardo.irc.IRCBot;
-import org.pircbotx.User;
-import org.pircbotx.hooks.types.GenericMessageEvent;
+import com.sk89q.eduardo.Context;
+import com.sk89q.eduardo.helper.Response;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CommandEvent implements Cancellable {
 
-    private final GenericMessageEvent<IRCBot> messageEvent;
+    private final Response response;
+    private final Context primaryContext;
+    private final Set<Context> contexts = new HashSet<>();
     private final String arguments;
+    private final int depth;
     private boolean cancelled;
 
-    public CommandEvent(GenericMessageEvent<IRCBot> messageEvent, String arguments) {
-        this.messageEvent = messageEvent;
+    public CommandEvent(Context primaryContext, String arguments, Response response) {
+        this(primaryContext, arguments, response, 0);
+    }
+
+    public CommandEvent(Context primaryContext, String arguments, Response response, int depth) {
+        checkNotNull(primaryContext);
+        checkNotNull(arguments);
+        checkNotNull(response);
+        checkArgument(depth >= 0, "depth must be >= 0");
+        this.primaryContext = primaryContext;
+        this.response = response;
         this.arguments = arguments;
+        this.depth = depth;
+        this.contexts.add(primaryContext);
     }
 
-    public GenericMessageEvent<IRCBot> getMessageEvent() {
-        return messageEvent;
+    public Context getPrimaryContext() {
+        return primaryContext;
     }
 
-    public void respond(String response) {
-        messageEvent.respond(response);
-    }
-
-    public User getUser() {
-        return messageEvent.getUser();
-    }
-
-    public String getMessage() {
-        return messageEvent.getMessage();
+    public Set<Context> getContexts() {
+        return contexts;
     }
 
     public String getArguments() {
         return arguments;
+    }
+
+    public Response getResponse() {
+        return response;
+    }
+
+    public int getDepth() {
+        return depth;
     }
 
     @Override
@@ -62,6 +81,10 @@ public class CommandEvent implements Cancellable {
     @Override
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
+    }
+
+    public void respond(String message) {
+        response.respond(message);
     }
 
 }

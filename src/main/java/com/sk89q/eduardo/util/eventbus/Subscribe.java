@@ -39,4 +39,11 @@ public @interface Subscribe {
      */
     EventHandler.Priority priority() default EventHandler.Priority.NORMAL;
 
+    /**
+     * Whether cancelled events should be ignored.
+     *
+     * @return true to ignore cancelled events
+     */
+    boolean ignoreCancelled() default false;
+
 }

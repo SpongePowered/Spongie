@@ -19,11 +19,12 @@
 
 package com.sk89q.eduardo;
 
-import com.sk89q.eduardo.util.eventbus.EventBus;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.matcher.Matchers;
+import com.sk89q.eduardo.util.eventbus.EventBus;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import org.slf4j.Logger;
@@ -68,6 +69,12 @@ public class DefaultModule extends AbstractModule {
     @Singleton
     EventBus provideEventBus() {
         return new EventBus();
+    }
+
+    @Provides
+    @Singleton
+    ObjectMapper provideObjectMapper() {
+        return new ObjectMapper();
     }
 
     @Provides

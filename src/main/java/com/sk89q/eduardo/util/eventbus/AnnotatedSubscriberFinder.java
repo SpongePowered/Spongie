@@ -56,7 +56,7 @@ class AnnotatedSubscriberFinder implements SubscriberFindingStrategy {
                                         "must require a single argument.");
                     }
                     Class<?> eventType = parameterTypes[0];
-                    EventHandler handler = new MethodEventHandler(annotation.priority(), listener, method);
+                    EventHandler handler = new MethodEventHandler(annotation.priority(), annotation.ignoreCancelled(), listener, method);
                     methodsInListener.put(eventType, handler);
                 }
             }

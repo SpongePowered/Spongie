@@ -21,8 +21,10 @@ package com.sk89q.eduardo.auth;
 
 import com.sk89q.eduardo.Context;
 
+import java.util.Collection;
+
 public interface AuthService {
 
-    Subject login(Context context);
+    Subject login(Collection<Context> contexts);
 
 }

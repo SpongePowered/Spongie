@@ -35,10 +35,12 @@ public class MethodEventHandler extends EventHandler {
      * Create a new event handler.
      *
      * @param priority the priority
+     * @param ignoreCancelled true to ignore cancelled
+     * @param object the object
      * @param method the method
      */
-    public MethodEventHandler(Priority priority, Object object, Method method) {
-        super(priority);
+    public MethodEventHandler(Priority priority, boolean ignoreCancelled, Object object, Method method) {
+        super(priority, ignoreCancelled);
         checkNotNull(method);
         this.object = object;
         this.method = method;
