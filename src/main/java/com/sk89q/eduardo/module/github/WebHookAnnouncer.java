@@ -53,7 +53,10 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static spark.Spark.*;
+import static com.sk89q.eduardo.util.formatting.IRCColorBuilder.asColorCodes;
+import static com.sk89q.eduardo.util.formatting.Style.*;
+import static com.sk89q.eduardo.util.formatting.StyledFragment.with;
+import static spark.Spark.post;
 
 @AutoRegister
 @Singleton
@@ -64,7 +67,7 @@ public class WebHookAnnouncer extends ListenerAdapter<PircBotX> {
     private static final Pattern COMMIT_CLEANUP = Pattern.compile("[\r\n].*$", Pattern.DOTALL);
     private static final Pattern SIGNATURE_PATTERN = Pattern.compile("^([^=]+)=(.+)$");
     private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
-    private static final int COMMIT_MAX_LEN = 50;
+    private static final int COMMIT_MAX_LEN = 80;
 
     private final ObjectMapper mapper = new ObjectMapper();
     private Config thisConfig;
@@ -159,7 +162,13 @@ public class WebHookAnnouncer extends ListenerAdapter<PircBotX> {
         log.info("Got GitHub push event for {}", payload.repository.fullName);
 
         broadcast(payload.repository.fullName, String.format(
-                "[%s] %s pushed %d commit%s to %s (%s)",
+                asColorCodes(with()
+                        .append(with(BOLD, DARK_GREEN).append("[%s]"))
+                        .append(" %s pushed ")
+                        .append(with(BOLD).append("%d commit%s"))
+                        .append(" to ")
+                        .append(with(BOLD).append("%s"))
+                        .append(" (%s)")),
                 payload.repository.name, Users.preventMention(payload.pusher.name), payload.commits.size(),
                 payload.commits.size() == 1 ? "" : "s",
                 simplifyGitRef(payload.ref), shortener.shorten(payload.compare)));
@@ -167,12 +176,14 @@ public class WebHookAnnouncer extends ListenerAdapter<PircBotX> {
         for (int i = 0; i < payload.commits.size(); i++) {
             Commit commit = payload.commits.get(i);
 
-            if (i >= 3) {
+            if (i >= 5) {
                 broadcast(payload.repository.fullName, "... etc.");
                 break;
             } else {
                 broadcast(payload.repository.fullName, String.format(
-                        "%s/%s %s: %s (by %s)",
+                        asColorCodes(with()
+                                .append(with(BOLD).append("%s/%s"))
+                                .append(" %s: %s (by %s)")),
                         payload.repository.name, simplifyGitRef(payload.ref),
                         simplifyGitId(commit.id), simplfiyCommitMessage(commit.message),
                         Users.preventMention(commit.author.name)));
