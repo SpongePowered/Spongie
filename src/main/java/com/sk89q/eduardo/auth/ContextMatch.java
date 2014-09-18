@@ -20,7 +20,7 @@
 package com.sk89q.eduardo.auth;
 
 import com.sk89q.eduardo.Context;
-import com.sk89q.eduardo.irc.ChannelUserMode;
+import com.sk89q.eduardo.connector.irc.ChannelUserMode;
 import com.sk89q.eduardo.util.text.FnMatch;
 import com.sk89q.eduardo.util.text.FnMatch.Flag;
 

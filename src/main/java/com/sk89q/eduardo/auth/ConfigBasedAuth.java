@@ -24,7 +24,7 @@ import com.google.inject.Singleton;
 import com.sk89q.eduardo.Context;
 import com.sk89q.eduardo.auth.policy.MultiMapPolicy;
 import com.sk89q.eduardo.auth.policy.Policy;
-import com.sk89q.eduardo.irc.ChannelUserMode;
+import com.sk89q.eduardo.connector.irc.ChannelUserMode;
 import com.typesafe.config.Config;
 
 import java.util.Collection;

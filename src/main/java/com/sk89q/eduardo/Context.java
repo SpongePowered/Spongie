@@ -19,7 +19,7 @@
 
 package com.sk89q.eduardo;
 
-import com.sk89q.eduardo.irc.ChannelUserMode;
+import com.sk89q.eduardo.connector.irc.ChannelUserMode;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;

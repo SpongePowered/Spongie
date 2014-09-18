@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.irc;
+package com.sk89q.eduardo.connector.irc;
 
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;

@@ -19,8 +19,8 @@
 
 package com.sk89q.eduardo;
 
-import com.sk89q.eduardo.irc.ChannelUserMode;
-import com.sk89q.eduardo.irc.IRCBot;
+import com.sk89q.eduardo.connector.irc.ChannelUserMode;
+import com.sk89q.eduardo.connector.irc.IRCBot;
 import com.sk89q.eduardo.util.irc.Users;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
