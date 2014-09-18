@@ -17,20 +17,38 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.helper;
+package com.sk89q.eduardo.event.message;
 
-import com.sk89q.eduardo.util.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.sk89q.eduardo.event.message.BroadcastEvent;
+import com.sk89q.eduardo.Context;
+import com.sk89q.eduardo.helper.Response;
 
-@Singleton
-public class GenericBroadcast {
+import static com.google.common.base.Preconditions.checkNotNull;
 
-    @Inject private EventBus eventBus;
+public class MessageEvent {
 
-    public void broadcast(String target, String message) {
-        eventBus.post(new BroadcastEvent(target, message));
+    private final Context context;
+    private final String message;
+    private final Response response;
+
+    public MessageEvent(Context context, String message, Response response) {
+        checkNotNull(context);
+        checkNotNull(message);
+        checkNotNull(response);
+        this.context = context;
+        this.message = message;
+        this.response = response;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Response getResponse() {
+        return response;
     }
 
 }

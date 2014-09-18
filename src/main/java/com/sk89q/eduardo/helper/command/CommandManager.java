@@ -22,13 +22,12 @@ package com.sk89q.eduardo.helper.command;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sk89q.eduardo.Context;
-import com.sk89q.eduardo.Contexts;
 import com.sk89q.eduardo.auth.AuthService;
 import com.sk89q.eduardo.auth.Subject;
 import com.sk89q.eduardo.event.CommandEvent;
+import com.sk89q.eduardo.event.message.MessageEvent;
 import com.sk89q.eduardo.helper.Response;
 import com.sk89q.eduardo.helper.throttle.RateLimiter;
-import com.sk89q.eduardo.irc.IRCBot;
 import com.sk89q.eduardo.util.eventbus.EventBus;
 import com.sk89q.eduardo.util.eventbus.EventHandler.Priority;
 import com.sk89q.eduardo.util.eventbus.Subscribe;
@@ -41,8 +40,6 @@ import com.sk89q.intake.dispatcher.SimpleDispatcher;
 import com.sk89q.intake.parametric.ParametricBuilder;
 import com.sk89q.intake.util.auth.AuthorizationException;
 import com.typesafe.config.Config;
-import org.pircbotx.hooks.events.MessageEvent;
-import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,35 +121,13 @@ public class CommandManager {
     }
 
     @Subscribe
-    public void onGenericMessage(GenericMessageEvent<IRCBot> event) {
+    public void onMessage(MessageEvent event) {
         String message = event.getMessage();
         String prefix = config.getString("command.prefix");
 
         if (message.length() > prefix.length() && message.startsWith(prefix)) {
             String arguments = message.substring(prefix.length());
-            eventBus.post(new CommandEvent(Contexts.create(event), arguments, new ResponseImpl(event)));
-        }
-    }
-
-    private static class ResponseImpl implements Response {
-        private final GenericMessageEvent<?> event;
-
-        private ResponseImpl(GenericMessageEvent<?> event) {
-            this.event = event;
-        }
-
-        @Override
-        public void respond(String message) {
-            event.respond(message);
-        }
-
-        @Override
-        public void broadcast(String message) {
-            if (event instanceof MessageEvent) {
-                ((MessageEvent) event).getChannel().send().message(message);
-            } else {
-                event.respond(message);
-            }
+            eventBus.post(new CommandEvent(event.getContext(), arguments, event.getResponse()));
         }
     }
 

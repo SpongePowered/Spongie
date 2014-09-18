@@ -19,12 +19,15 @@
 
 package com.sk89q.eduardo.irc;
 
-import com.sk89q.eduardo.util.eventbus.EventBus;
-import com.sk89q.eduardo.util.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sk89q.eduardo.event.BroadcastEvent;
+import com.sk89q.eduardo.Contexts;
 import com.sk89q.eduardo.event.StartupEvent;
+import com.sk89q.eduardo.event.message.BroadcastEvent;
+import com.sk89q.eduardo.event.message.MessageEvent;
+import com.sk89q.eduardo.helper.Response;
+import com.sk89q.eduardo.util.eventbus.EventBus;
+import com.sk89q.eduardo.util.eventbus.Subscribe;
 import com.typesafe.config.Config;
 import org.pircbotx.Configuration;
 import org.pircbotx.Configuration.Builder;
@@ -33,6 +36,7 @@ import org.pircbotx.PircBotX;
 import org.pircbotx.UtilSSLSocketFactory;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.hooks.Listener;
+import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,6 +102,11 @@ public class PircBotXClient implements Listener<IRCBot> {
     }
 
     @Subscribe
+    public void onGenericMessage(GenericMessageEvent<IRCBot> event) {
+        eventBus.post(new MessageEvent(Contexts.create(event), event.getMessage(), new ResponseImpl(event)));
+    }
+
+    @Subscribe
     public void onBroadcast(BroadcastEvent event) {
         String target = event.getTarget();
         if (target.startsWith("#")) {
@@ -110,6 +119,28 @@ public class PircBotXClient implements Listener<IRCBot> {
     @Override
     public void onEvent(Event<IRCBot> event) throws Exception {
         eventBus.post(event);
+    }
+
+    private static class ResponseImpl implements Response {
+        private final GenericMessageEvent<?> event;
+
+        private ResponseImpl(GenericMessageEvent<?> event) {
+            this.event = event;
+        }
+
+        @Override
+        public void respond(String message) {
+            event.respond(message);
+        }
+
+        @Override
+        public void broadcast(String message) {
+            if (event instanceof org.pircbotx.hooks.events.MessageEvent) {
+                ((org.pircbotx.hooks.events.MessageEvent) event).getChannel().send().message(message);
+            } else {
+                event.respond(message);
+            }
+        }
     }
 
 }
