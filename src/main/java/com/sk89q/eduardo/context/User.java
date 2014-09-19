@@ -17,14 +17,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.auth;
+package com.sk89q.eduardo.context;
 
-import com.sk89q.eduardo.context.Context;
+import javax.annotation.Nullable;
 
-import java.util.Collection;
+public interface User {
 
-public interface AuthService {
+    String getId();
 
-    Subject login(Collection<Context> contexts);
+    @Nullable
+    String getLogin();
+
+    @Nullable
+    String getHostMask();
 
 }

@@ -33,7 +33,7 @@ import com.sk89q.eduardo.helper.shortener.URLShortener;
 import com.sk89q.eduardo.http.status.BadRequestError;
 import com.sk89q.eduardo.http.status.InternalServerError;
 import com.sk89q.eduardo.util.eventbus.Subscribe;
-import com.sk89q.eduardo.util.irc.Users;
+import com.sk89q.eduardo.context.Users;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import org.apache.commons.codec.binary.Hex;
@@ -53,7 +53,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.sk89q.eduardo.util.formatting.IRCColorBuilder.asColorCodes;
+import static com.sk89q.eduardo.connector.irc.IRCColorBuilder.asColorCodes;
 import static com.sk89q.eduardo.util.formatting.Style.*;
 import static com.sk89q.eduardo.util.formatting.StyledFragment.with;
 import static spark.Spark.post;

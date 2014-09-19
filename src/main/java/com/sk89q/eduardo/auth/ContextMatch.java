@@ -19,8 +19,9 @@
 
 package com.sk89q.eduardo.auth;
 
-import com.sk89q.eduardo.Context;
-import com.sk89q.eduardo.connector.irc.ChannelUserMode;
+import com.sk89q.eduardo.context.Context;
+import com.sk89q.eduardo.context.Mode;
+import com.sk89q.eduardo.context.Users;
 import com.sk89q.eduardo.util.text.FnMatch;
 import com.sk89q.eduardo.util.text.FnMatch.Flag;
 
@@ -36,7 +37,7 @@ public class ContextMatch implements Predicate<Context> {
 
     private final Set<String> users = new HashSet<>();
     private final Set<String> channels = new HashSet<>();
-    private final Set<ChannelUserMode> modes = new HashSet<>();
+    private final Set<Mode> modes = new HashSet<>();
 
     public void matchUser(String s) {
         checkNotNull(s);
@@ -60,13 +61,13 @@ public class ContextMatch implements Predicate<Context> {
         }
     }
 
-    public void matchMode(ChannelUserMode mode) {
+    public void matchMode(Mode mode) {
         checkNotNull(mode);
         modes.add(mode);
     }
 
-    public void matchAllModes(Collection<ChannelUserMode> c) {
-        for (ChannelUserMode mode : c) {
+    public void matchAllModes(Collection<Mode> c) {
+        for (Mode mode : c) {
             matchMode(mode);
         }
     }
@@ -77,7 +78,7 @@ public class ContextMatch implements Predicate<Context> {
             if (context.getUser() != null) {
                 boolean pass = false;
                 for (String pattern : users) {
-                    if (FnMatch.fnmatch(pattern, context.getUser(), EnumSet.of(Flag.CASEFOLD))) {
+                    if (FnMatch.fnmatch(pattern, Users.getUserMask(context.getUser()), EnumSet.of(Flag.CASEFOLD))) {
                         pass = true;
                         break;
                     }
@@ -91,8 +92,8 @@ public class ContextMatch implements Predicate<Context> {
         }
 
         if (!channels.isEmpty()) {
-            if (context.getChannel() != null) {
-                boolean pass = channels.contains(context.getChannel());
+            if (context.getRoom() != null) {
+                boolean pass = channels.contains(context.getRoom().getId().toLowerCase());
                 if (!pass) {
                     return false;
                 }
@@ -104,7 +105,7 @@ public class ContextMatch implements Predicate<Context> {
         if (!modes.isEmpty()) {
             if (!context.getModes().isEmpty()) {
                 boolean pass = false;
-                for (ChannelUserMode mode : context.getModes()) {
+                for (Mode mode : context.getModes()) {
                     if (modes.contains(mode)) {
                         pass = true;
                         break;

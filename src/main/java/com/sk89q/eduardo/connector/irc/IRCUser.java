@@ -19,10 +19,33 @@
 
 package com.sk89q.eduardo.connector.irc;
 
-public enum ChannelUserMode {
+import com.sk89q.eduardo.context.User;
 
-    OPERATOR,
-    HALF_OP,
-    VOICED
+import javax.annotation.Nullable;
+
+class IRCUser implements User {
+
+    private final org.pircbotx.User user;
+
+    IRCUser(org.pircbotx.User user) {
+        this.user = user;
+    }
+
+    @Override
+    public String getId() {
+        return user.getNick();
+    }
+
+    @Nullable
+    @Override
+    public String getLogin() {
+        return user.getLogin();
+    }
+
+    @Nullable
+    @Override
+    public String getHostMask() {
+        return user.getHostmask();
+    }
 
 }

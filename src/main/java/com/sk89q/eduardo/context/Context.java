@@ -17,38 +17,45 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.context;
 
-import com.sk89q.eduardo.context.Context;
-import com.sk89q.eduardo.helper.Response;
+import javax.annotation.Nullable;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class MessageEvent {
+public class Context {
 
-    private final Context context;
-    private final String message;
-    private final Response response;
+    private final Network network;
+    private final User user;
+    @Nullable private final Room room;
+    private final Set<Mode> modes;
 
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    public Context(Network network, User user, @Nullable Room room, Set<Mode> modes) {
+        checkNotNull(network);
+        checkNotNull(user);
+        checkNotNull(modes);
+        this.network = network;
+        this.user = user;
+        this.room = room;
+        this.modes = modes;
     }
 
-    public Context getContext() {
-        return context;
+    public Network getNetwork() {
+        return network;
     }
 
-    public String getMessage() {
-        return message;
+    public User getUser() {
+        return user;
     }
 
-    public Response getResponse() {
-        return response;
+    @Nullable
+    public Room getRoom() {
+        return room;
+    }
+
+    public Set<Mode> getModes() {
+        return modes;
     }
 
 }

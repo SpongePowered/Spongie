@@ -19,7 +19,7 @@
 
 package com.sk89q.eduardo.helper.command;
 
-import com.sk89q.eduardo.Context;
+import com.sk89q.eduardo.context.Context;
 import com.sk89q.eduardo.auth.Subject;
 import com.sk89q.eduardo.event.CommandEvent;
 import com.sk89q.eduardo.helper.Response;

@@ -20,11 +20,11 @@
 package com.sk89q.eduardo.module;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sk89q.eduardo.Context;
+import com.sk89q.eduardo.context.Context;
+import com.sk89q.eduardo.context.Room;
 import com.sk89q.eduardo.event.CommandEvent;
 import com.sk89q.eduardo.helper.AutoRegister;
 import com.sk89q.eduardo.helper.Response;
@@ -50,7 +50,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -70,7 +69,6 @@ public class Alias {
     private final Table<?> aliasTable;
     @Inject private EventBus eventBus;
     @Inject private CommandManager commandManager;
-    @Inject private ObjectMapper mapper;
 
     @Inject
     public Alias(Persistence persistence) {
@@ -93,13 +91,10 @@ public class Alias {
                     return null;
                 } else {
                     String command = (String) record.get(0).getValue("command");
-                    Context context = mapper.readValue((String) record.get(0).getValue("context"), Context.class);
-                    context.setNetwork(inheritFrom.getNetwork());
-                    context.setChannel(inheritFrom.getChannel());
-                    return new ResolvedAlias(command, context);
+                    return new ResolvedAlias(command, inheritFrom);
                 }
             }
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             log.warn("Failed to get alias due to an error", e);
             return null;
         }
@@ -141,9 +136,9 @@ public class Alias {
         alias = commandManager.removePrefix(alias);
         command = commandManager.removePrefix(command);
 
-        String channel = context.getChannel();
-        if (channel == null) {
-            throw new CommandException("Aliases only work on channels");
+        Room room = context.getRoom();
+        if (room == null) {
+            throw new CommandException("Aliases only work on rooms");
         }
 
         try (Connection conn = bucket.createConnection()) {
@@ -163,9 +158,9 @@ public class Alias {
     public void remove(Context context, Response response, String alias) throws SQLException, CommandException {
         alias = commandManager.removePrefix(alias);
 
-        String channel = context.getChannel();
-        if (channel == null) {
-            throw new CommandException("Aliases only work on channels");
+        Room room = context.getRoom();
+        if (room == null) {
+            throw new CommandException("Aliases only work on rooms");
         }
 
         try (Connection conn = bucket.createConnection()) {
@@ -181,8 +176,8 @@ public class Alias {
 
     private void doDelete(DSLContext create, Context context, String alias) {
         create.delete(aliasTable)
-                .where(field("network").eq(context.getNetwork().toLowerCase()))
-                .and(field("channel").eq(context.getChannel().toLowerCase()))
+                .where(field("network").eq(context.getNetwork().getId().toLowerCase()))
+                .and(field("channel").eq(context.getRoom().getId().toLowerCase()))
                 .and(field("alias").eq(alias.toLowerCase()))
                 .execute();
     }
@@ -193,13 +188,11 @@ public class Alias {
                 field("network"),
                 field("channel"),
                 field("alias"),
-                field("command"),
-                field("context"))
-                .values(context.getNetwork().toLowerCase(),
-                        context.getChannel().toLowerCase(),
+                field("command"))
+                .values(context.getNetwork().getId().toLowerCase(),
+                        context.getRoom().getId().toLowerCase(),
                         alias.toLowerCase(),
-                        command,
-                        mapper.writeValueAsString(context))
+                        command)
                 .execute();
     }
 

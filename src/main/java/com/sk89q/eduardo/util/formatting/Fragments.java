@@ -17,14 +17,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.auth;
+package com.sk89q.eduardo.util.formatting;
 
-import com.sk89q.eduardo.context.Context;
+public final class Fragments {
 
-import java.util.Collection;
+    private Fragments() {
+    }
 
-public interface AuthService {
-
-    Subject login(Collection<Context> contexts);
+    public static String renderPlain(StyledFragment fragment) {
+        return PlainTextBuilder.asPlainText(fragment);
+    }
 
 }

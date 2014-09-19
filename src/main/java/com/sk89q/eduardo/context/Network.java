@@ -17,14 +17,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.auth;
+package com.sk89q.eduardo.context;
 
-import com.sk89q.eduardo.context.Context;
+public interface Network {
 
-import java.util.Collection;
-
-public interface AuthService {
-
-    Subject login(Collection<Context> contexts);
+    String getId();
 
 }

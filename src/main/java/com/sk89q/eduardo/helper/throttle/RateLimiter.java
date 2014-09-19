@@ -25,7 +25,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sk89q.eduardo.Context;
+import com.sk89q.eduardo.context.Context;
+import com.sk89q.eduardo.context.Users;
 import com.typesafe.config.Config;
 import org.isomorphism.util.TokenBucket;
 import org.isomorphism.util.TokenBuckets;
@@ -38,20 +39,20 @@ public class RateLimiter {
 
     private static final double FACTOR = 100;
     private static final String GLOBAL_BUCKET = "global";
-    private static final String CHANNEL_BUCKET = "per-channel";
+    private static final String ROOM_BUCKET = "per-room";
     private static final String HOST_BUCKET = "per-host";
 
     private final Ticker ticker = Ticker.systemTicker();
     private final Config thisConfig;
     private final TokenBucket global;
-    private final LoadingCache<String, TokenBucket> perChannel;
+    private final LoadingCache<String, TokenBucket> perRoom;
     private final LoadingCache<String, TokenBucket> perHost;
 
     @Inject
     public RateLimiter(Config config) {
         this.thisConfig = config.getConfig("rate-limiter");
         global = createTokenBucket(GLOBAL_BUCKET);
-        perChannel = createTokenBucketCache(CHANNEL_BUCKET);
+        perRoom = createTokenBucketCache(ROOM_BUCKET);
         perHost = createTokenBucketCache(HOST_BUCKET);
     }
 
@@ -59,14 +60,14 @@ public class RateLimiter {
         long tokensLong = applyFactor(tokens);
 
         if (context.getUser() != null) {
-            TokenBucket bucket = perHost.getUnchecked(context.getUser());
+            TokenBucket bucket = perHost.getUnchecked(Users.getUserMask(context.getUser()));
             if (!bucket.tryConsume(tokensLong)) {
                 return false;
             }
         }
 
-        if (context.getChannel() != null) {
-            TokenBucket bucket = perChannel.getUnchecked(context.getChannel().toLowerCase());
+        if (context.getRoom() != null) {
+            TokenBucket bucket = perRoom.getUnchecked(context.getRoom().getId().toLowerCase());
             if (!bucket.tryConsume(tokensLong)) {
                 return false;
             }

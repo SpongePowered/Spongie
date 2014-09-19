@@ -3,7 +3,6 @@ CREATE TABLE ${tablePrefix}aliases (
     channel VARCHAR(255) NOT NULL,
 	alias VARCHAR(255) NOT NULL,
 	command TEXT NOT NULL,
-	context TEXT NOT NULL,
 	PRIMARY KEY (network, channel, alias)
 );
 

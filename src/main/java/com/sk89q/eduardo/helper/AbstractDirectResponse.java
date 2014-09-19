@@ -17,14 +17,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.auth;
+package com.sk89q.eduardo.helper;
 
-import com.sk89q.eduardo.context.Context;
+import com.sk89q.eduardo.util.formatting.StyledFragment;
 
-import java.util.Collection;
+public abstract class AbstractDirectResponse implements Response {
 
-public interface AuthService {
-
-    Subject login(Collection<Context> contexts);
+    @Override
+    public void respond(StyledFragment fragment) {
+        broadcast(fragment);
+    }
 
 }

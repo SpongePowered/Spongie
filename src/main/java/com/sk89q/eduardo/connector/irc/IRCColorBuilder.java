@@ -17,9 +17,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.util.formatting;
+package com.sk89q.eduardo.connector.irc;
 
 import com.google.common.base.Joiner;
+import com.sk89q.eduardo.util.formatting.Fragment;
+import com.sk89q.eduardo.util.formatting.Style;
+import com.sk89q.eduardo.util.formatting.StyleSet;
+import com.sk89q.eduardo.util.formatting.StyledFragment;
 
 public class IRCColorBuilder {
 

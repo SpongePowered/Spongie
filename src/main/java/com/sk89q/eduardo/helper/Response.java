@@ -19,21 +19,22 @@
 
 package com.sk89q.eduardo.helper;
 
-import com.sk89q.eduardo.util.formatting.IRCColorBuilder;
 import com.sk89q.eduardo.util.formatting.StyledFragment;
+
+import static com.sk89q.eduardo.util.formatting.StyledFragment.with;
 
 public interface Response {
 
-    void respond(String message);
+    void respond(StyledFragment fragment);
 
-    void broadcast(String message);
+    void broadcast(StyledFragment fragment);
 
-    default void respond(StyledFragment fragment) {
-        respond(IRCColorBuilder.asColorCodes(fragment));
+    default void respond(String message) {
+        respond(with().append(message));
     }
 
-    default void broadcast(StyledFragment fragment) {
-        broadcast(IRCColorBuilder.asColorCodes(fragment));
+    default void broadcast(String message) {
+        broadcast(with().append(message));
     }
-    
+
 }

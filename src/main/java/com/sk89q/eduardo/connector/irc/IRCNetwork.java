@@ -17,24 +17,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.util.irc;
+package com.sk89q.eduardo.connector.irc;
 
-import org.pircbotx.User;
+import com.sk89q.eduardo.context.Network;
 
-public final class Users {
+class IRCNetwork implements Network {
 
-    private Users() {
+    private final IRCBot bot;
+
+    IRCNetwork(IRCBot bot) {
+        this.bot = bot;
     }
 
-    public static String getUserMask(User user) {
-        return user.getNick() + "!" + user.getLogin() + "@" + user.getHostmask();
+    @Override
+    public String getId() {
+        return bot.getId();
     }
 
-    public static String preventMention(String name) {
-        if (name.length() >= 2) {
-            return name.charAt(0) + "." + name.substring(1);
-        } else {
-            return name;
-        }
-    }
 }

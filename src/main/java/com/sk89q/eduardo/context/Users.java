@@ -17,14 +17,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.auth;
+package com.sk89q.eduardo.context;
 
-import com.sk89q.eduardo.context.Context;
+public final class Users {
 
-import java.util.Collection;
+    private Users() {
+    }
 
-public interface AuthService {
+    public static String getUserMask(User user) {
+        return user.getId() + "!" + user.getLogin() + "@" + user.getHostMask();
+    }
 
-    Subject login(Collection<Context> contexts);
-
+    public static String preventMention(String name) {
+        if (name.length() >= 2) {
+            return name.charAt(0) + "." + name.substring(1);
+        } else {
+            return name;
+        }
+    }
 }

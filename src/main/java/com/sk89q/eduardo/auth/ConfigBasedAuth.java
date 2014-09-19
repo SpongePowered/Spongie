@@ -21,10 +21,10 @@ package com.sk89q.eduardo.auth;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sk89q.eduardo.Context;
+import com.sk89q.eduardo.context.Context;
 import com.sk89q.eduardo.auth.policy.MultiMapPolicy;
 import com.sk89q.eduardo.auth.policy.Policy;
-import com.sk89q.eduardo.connector.irc.ChannelUserMode;
+import com.sk89q.eduardo.context.Mode;
 import com.typesafe.config.Config;
 
 import java.util.Collection;
@@ -44,11 +44,11 @@ public class ConfigBasedAuth implements AuthService {
 
             ContextMatch match = new ContextMatch();
             match.matchAllUsers(policy.getStringList("users"));
-            match.matchAllChannels(policy.getStringList("channels"));
+            match.matchAllChannels(policy.getStringList("rooms"));
             match.matchAllModes(
                     policy.getStringList("modes")
                             .stream()
-                            .map(ChannelUserMode::valueOf)
+                            .map(Mode::valueOf)
                             .collect(Collectors.toList()));
 
             for (String permission : policy.getStringList("grant")) {

@@ -21,26 +21,36 @@ package com.sk89q.eduardo.connector.irc;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sk89q.eduardo.Contexts;
+import com.sk89q.eduardo.context.Context;
+import com.sk89q.eduardo.context.Mode;
 import com.sk89q.eduardo.event.StartupEvent;
 import com.sk89q.eduardo.event.message.BroadcastEvent;
 import com.sk89q.eduardo.event.message.MessageEvent;
 import com.sk89q.eduardo.helper.Response;
 import com.sk89q.eduardo.util.eventbus.EventBus;
 import com.sk89q.eduardo.util.eventbus.Subscribe;
+import com.sk89q.eduardo.util.formatting.StyledFragment;
 import com.typesafe.config.Config;
+import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
 import org.pircbotx.Configuration.Builder;
 import org.pircbotx.MultiBotManager;
 import org.pircbotx.PircBotX;
+import org.pircbotx.User;
 import org.pircbotx.UtilSSLSocketFactory;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.hooks.Listener;
+import org.pircbotx.hooks.events.NoticeEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Singleton
@@ -103,7 +113,7 @@ public class PircBotXClient implements Listener<IRCBot> {
 
     @Subscribe
     public void onGenericMessage(GenericMessageEvent<IRCBot> event) {
-        eventBus.post(new MessageEvent(Contexts.create(event), event.getMessage(), new ResponseImpl(event)));
+        eventBus.post(new MessageEvent(createContext(event), event.getMessage(), new ResponseImpl(event)));
     }
 
     @Subscribe
@@ -121,6 +131,40 @@ public class PircBotXClient implements Listener<IRCBot> {
         eventBus.post(event);
     }
 
+    private static Context createContext(GenericMessageEvent<? extends IRCBot> event) {
+        User user = event.getUser();
+        @Nullable Channel channel;
+        List<Mode> modes = new ArrayList<>();
+
+        if (event instanceof org.pircbotx.hooks.events.MessageEvent) {
+            channel = ((org.pircbotx.hooks.events.MessageEvent) event).getChannel();
+        } else if (event instanceof NoticeEvent) {
+            channel = ((NoticeEvent) event).getChannel();
+        } else {
+            channel = null;
+        }
+
+        if (channel != null) {
+            if (user.getChannelsOpIn().contains(channel)) {
+                modes.add(Mode.OPERATOR);
+            }
+
+            if (user.getChannelsHalfOpIn().contains(channel)) {
+                modes.add(Mode.HALF_OP);
+            }
+
+            if (user.getChannelsVoiceIn().contains(channel)) {
+                modes.add(Mode.VOICED);
+            }
+        }
+
+        return new Context(
+                new IRCNetwork(event.getBot()),
+                new IRCUser(event.getUser()),
+                channel != null ? new IRCRoom(channel) : null,
+                modes.isEmpty() ? Collections.emptySet() : EnumSet.copyOf(modes));
+    }
+
     private static class ResponseImpl implements Response {
         private final GenericMessageEvent<?> event;
 
@@ -129,12 +173,14 @@ public class PircBotXClient implements Listener<IRCBot> {
         }
 
         @Override
-        public void respond(String message) {
-            event.respond(message);
+        public void respond(StyledFragment fragment) {
+            event.respond(IRCColorBuilder.asColorCodes(fragment));
         }
 
         @Override
-        public void broadcast(String message) {
+        public void broadcast(StyledFragment fragment) {
+            String message = IRCColorBuilder.asColorCodes(fragment);
+
             if (event instanceof org.pircbotx.hooks.events.MessageEvent) {
                 ((org.pircbotx.hooks.events.MessageEvent) event).getChannel().send().message(message);
             } else {

@@ -17,14 +17,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.auth;
+package com.sk89q.eduardo.connector.irc;
 
-import com.sk89q.eduardo.context.Context;
+import com.sk89q.eduardo.context.Room;
+import org.pircbotx.Channel;
 
-import java.util.Collection;
+class IRCRoom implements Room {
 
-public interface AuthService {
+    private final Channel channel;
 
-    Subject login(Collection<Context> contexts);
+    IRCRoom(Channel channel) {
+        this.channel = channel;
+    }
+
+    @Override
+    public String getId() {
+        return channel.getName();
+    }
 
 }
