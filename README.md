@@ -1,18 +1,20 @@
 Eduardo
 =======
 
-Eduardo is an IRC bot (+ framework).
+Eduardo is a command and chat bot written in Java.
 
-* PircBotX powered
-* Jetty powered
-* Modules are not hot-(re)loadable
+* Connects to IRC, Skype, and anything that you want to throw at it
+* Embedded web server
+* Extremely simple architecture
+* Extremely powerful
+* Access to Java's huge 3rd party library ecosystem
 
 Features
 --------
 
 ### Easily-registered commands
 
-* Support for checking ermissions
+* Support for checking permissions
 * Support for rate limiting per-host mask, per-channel, and globally
 
 ```java
