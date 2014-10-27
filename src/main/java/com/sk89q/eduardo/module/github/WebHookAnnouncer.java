@@ -207,7 +207,7 @@ public class WebHookAnnouncer extends ListenerAdapter<PircBotX> {
     }
 
     private static String simplfiyCommitMessage(String s) {
-        s = COMMIT_CLEANUP.matcher(s).replaceAll("test");
+        s = COMMIT_CLEANUP.matcher(s).replaceAll("");
         if (s.length() > COMMIT_MAX_LEN) {
             s = s.substring(0, COMMIT_MAX_LEN) + "...";
         }
