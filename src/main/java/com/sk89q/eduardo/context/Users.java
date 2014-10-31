@@ -30,7 +30,7 @@ public final class Users {
 
     public static String preventMention(String name) {
         if (name.length() >= 2) {
-            return name.charAt(0) + "." + name.substring(1);
+            return name.charAt(0) + "\u200B" + name.substring(1);
         } else {
             return name;
         }
