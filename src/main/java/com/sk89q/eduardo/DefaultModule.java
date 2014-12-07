@@ -25,8 +25,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.matcher.Matchers;
+import com.sk89q.eduardo.util.config.ConfigFile;
 import com.sk89q.eduardo.util.eventbus.EventBus;
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigUtil;
 import com.typesafe.config.ConfigValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +41,9 @@ public class DefaultModule extends AbstractModule {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultModule.class);
 
-    private final Config config;
+    private final ConfigFile config;
 
-    public DefaultModule(Config config) {
+    public DefaultModule(ConfigFile config) {
         checkNotNull(config);
         this.config = config;
     }
@@ -54,7 +56,7 @@ public class DefaultModule extends AbstractModule {
         try {
             Config mapping = config.getConfig("services.mapping");
             for (Entry<String, ConfigValue> entry : mapping.entrySet()) {
-                String serviceName = entry.getKey();
+                String serviceName = ConfigUtil.splitPath(entry.getKey()).get(0);
                 String implName = entry.getValue().unwrapped().toString();
                 log.info("Binding {} -> {}", new Object[] { serviceName, implName });
                 Class<Object> service = (Class<Object>) Class.forName(serviceName);
@@ -83,6 +85,12 @@ public class DefaultModule extends AbstractModule {
     @Provides
     @Singleton
     Config provideConfig() {
+        return config;
+    }
+
+    @Provides
+    @Singleton
+    ConfigFile provideConfigFile() {
         return config;
     }
 

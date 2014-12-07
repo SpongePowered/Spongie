@@ -20,13 +20,14 @@
 package com.sk89q.eduardo;
 
 import com.beust.jcommander.JCommander;
-import com.sk89q.eduardo.util.eventbus.EventBus;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.sk89q.eduardo.event.ConfigureEvent;
 import com.sk89q.eduardo.event.StartupEvent;
+import com.sk89q.eduardo.util.config.ConfigFile;
+import com.sk89q.eduardo.util.eventbus.EventBus;
 import com.sk89q.eduardo.util.logging.SimpleLogFormatter;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -43,11 +44,11 @@ public class Eduardo {
     private static final Logger log = LoggerFactory.getLogger(Eduardo.class);
 
     private final Injector injector;
-    private final Config config;
+    private final ConfigFile config;
     private final EventBus bus;
 
     @Inject
-    public Eduardo(Injector injector, Config config, EventBus bus) {
+    public Eduardo(Injector injector, ConfigFile config, EventBus bus) {
         this.injector = injector;
         this.config = config;
         this.bus = bus;
@@ -66,6 +67,9 @@ public class Eduardo {
         log.info("Modules loaded; initializing...");
 
         bus.post(new ConfigureEvent());
+
+        config.save(true);
+
         bus.post(new StartupEvent());
 
         log.info("Initialization complete.");
@@ -87,7 +91,15 @@ public class Eduardo {
         }
 
         File configFile = new File(opt.config);
-        Config config = ConfigFactory.parseFileAnySyntax(configFile).withFallback(ConfigFactory.load());
+
+        if (!configFile.exists()) {
+            log.error("The provided configuration file does not exist");
+            System.exit(1);
+            return;
+        }
+
+        Config fallback = ConfigFactory.parseResources(Eduardo.class.getClassLoader(), "reference.conf");
+        ConfigFile config = ConfigFile.parseFile(configFile).withFallback(fallback);
         Injector injector = Guice.createInjector(new DefaultModule(config));
 
         try {

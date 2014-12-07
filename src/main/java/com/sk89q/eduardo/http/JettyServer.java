@@ -44,7 +44,7 @@ public class JettyServer {
 
     @Subscribe
     public void onStartup(StartupEvent event) throws UnknownHostException {
-        setIpAddress(config.getString("http.bind_address"));
+        setIpAddress(config.getString("http.bind-address"));
         setPort(config.getInt("http.port"));
 
         staticFileLocation("/public");

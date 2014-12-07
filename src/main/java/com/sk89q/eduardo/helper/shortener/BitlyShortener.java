@@ -42,7 +42,7 @@ public class BitlyShortener implements URLShortener {
     @Inject
     public BitlyShortener(Config config) {
         Config thisConfig = config.getConfig("bitly");
-        client = Bitly.as(thisConfig.getString("user"), thisConfig.getString("api_key"));
+        client = Bitly.as(thisConfig.getString("user"), thisConfig.getString("api-key"));
     }
 
     @Override
