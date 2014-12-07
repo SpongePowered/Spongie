@@ -59,9 +59,9 @@ import static org.jooq.impl.DSL.field;
 
 @AutoRegister
 @Singleton
-public class Alias {
+public class AliasManager {
 
-    private static final Logger log = LoggerFactory.getLogger(Alias.class);
+    private static final Logger log = LoggerFactory.getLogger(AliasManager.class);
     private static final String ID = "alias";
     private static final int MAX_DEPTH = 5;
 
@@ -71,7 +71,7 @@ public class Alias {
     @Inject private CommandManager commandManager;
 
     @Inject
-    public Alias(Persistence persistence) {
+    public AliasManager(Persistence persistence) {
         bucket = persistence.connect(ID);
         aliasTable = bucket.table("aliases");
     }

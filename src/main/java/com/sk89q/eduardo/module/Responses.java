@@ -28,7 +28,7 @@ import com.sk89q.intake.parametric.annotation.Text;
 
 @AutoRegister
 @Singleton
-public class Say {
+public class Responses {
 
     @Command(aliases = "respond", desc = "Respond with a message")
     @RateLimit
