@@ -19,6 +19,7 @@
 
 package com.sk89q.eduardo;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -74,7 +75,9 @@ public class DefaultModule extends AbstractModule {
     @Provides
     @Singleton
     ObjectMapper provideObjectMapper() {
-        return new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper;
     }
 
     @Provides
