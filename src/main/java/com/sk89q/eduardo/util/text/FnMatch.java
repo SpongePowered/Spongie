@@ -34,7 +34,7 @@ public class FnMatch {
         PATHNAME,
         /** Period must be matched by period. */
         PERIOD,
-        /** Ignore /<tail> after Imatch. */
+        /** Ignore /&lt;tail&gt; after Imatch. */
         LEADING_DIR,
         /** Case insensitive search. */
         CASEFOLD
