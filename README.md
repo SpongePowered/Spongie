@@ -9,148 +9,74 @@ Eduardo is a command and chat bot written in Java.
 * Extremely powerful
 * Access to Java's huge 3rd party library ecosystem
 
-Features
---------
+## Usage
 
-### Easily-registered commands
+Run the bot with `java -jar eduardo-all.jar path_to_config.yml`
 
-* Support for checking permissions
-* Support for rate limiting per-host mask, per-channel, and globally
+The configuration file will be created if it does not exist, and at which point, you can fill it with plugins after shutting down the bot:
 
-```java
-@AutoRegister public class HelloWorld {
-  @Command(aliases = "hello", desc = "Say hello back")
-  public void helloWorld(Response response) {
-    response.respond("Hello world!")
+```yaml
+plugins:
+  enabled:
+  - alias
+  - irc
+  - responses
+  - perms-tester
+  - google-search
+  - shortener
+  - help
+```
+
+Some plugins need more configuration, so those entries will be added to the configuration file. Stop the bot, edit the file and start the bot again.
+
+A connection to an IRC server can be configured as illustrated below:
+
+```yaml
+irc:
+  servers:
+  - auto-join:
+    - '#example'
+    ssl: false
+    password: ''
+    port: 6667
+    host: example.com
+    name: your_bot_name
+    id: myserver
+```
+
+## Writing Plugins
+
+**WARNING:** The bot is under development and is subject to massive changes with no notice.  There are currently some unfinished parts that exist in a state merely to get everything else working.
+
+```scala
+@Plugin(id = "hello")
+class HelloPlugin {
+
+  @Command(aliases = Array("hello"), desc = "Say hi")
+  def helloCommand(response: Response, name: String) = {
+    response.respond(s"Hi there, $name!")
   }
+
 }
 ```
 
-### Easily-registered web front end
+A `@Singleton` annotation can be put on `HelloPlugin` to prevent another plugin that references this plugin in an `@Inject` (relevant because dependency injection is used) from causing another instance of your plugin class to be created.
 
-* Powered by a Sintara-inspired API (via the Spark library)
-* Support for static files
-* Support for the Mustache templating engine
+### Upcoming big changes
 
-```java
-@AutoRegister public class HelloWorld {
-  @Subscribe public void onConfigureRoute(ConfigureRouteEvent event) {
-    get("/hello/", (req, resp) -> "Hello World!");
-  }
-}
+* Add support for per-channel "features" to replace permissions for most use cases (the permissions code would still exist for administrative functions)
+* Add support for per-channel preferences (i.e. to configure a greeting message for a greeting plugin)
+* Make the need for `@RateLimit` less.
 
-```
+## Compiling
 
-### IoC-powered
+Use Gradle to compile the project.
 
-```java
-public class Shortener {
-  @Inject private URLShortener shortener;
+    ./gradlew clean build
 
-  public void doSomething() {
-    URL shortened = shortener.shorten(...);
-  }
-}
-```
+If you are on Windows, remove `./` from the line above and run it in command prompt.
 
-### JDBC-based persistence with migration support
-
-* Support for automatic table migrations
-* Access data using jOOQ
-
-```java
-Bucket b = persistence.connect("alias");
-
-// Migration already performed and versioned
-
-try (Connection conn = b.createConnection()) {
-  DSLContext create = DSL.using(conn);
-
-  Result<Record> record = create.select()
-    .from(b.table("aliases"))
-    .where(field("alias").eq(alias.toLowerCase()))
-    .fetch();
-  
-  // etc.
-}
-```
-
-### Powerful permissions
-
-```perl
-config-perms = {
-  policy = [
-    {
-      users = [ "bob!*@*" ]
-      grant = [
-        "bob.all.the.things"
-      ],
-      deny = [
-        "bob.all.the.things.but.not.some"
-      ]
-    },
-    {
-      channels = [ "#example" ]
-      modes = [ OPERATOR ]
-      grant = [ "example.perm" ]
-    }
-  ]
-}
-```
-
-### Service-oriented
-
-```perl
-services = {
-  mapping = {
-    com.sk89q.eduardo.helper.shortener.URLShortener = com.sk89q.eduardo.helper.shortener.BitlyShortener
-  }
-}
-```
-
-### Easily configured
-
-```perl
-modules = {
-  enabled = [
-    com.sk89q.eduardo.irc.PircBotXClient,
-    com.sk89q.eduardo.module.github.WebHookAnnouncer,
-    com.sk89q.eduardo.module.Shortener,
-  ]
-}
-
-irc = {
-  version = Scott/1.0
-
-  servers = [
-    {
-      id = local # server ID
-      name = Scott
-      host = localhost
-      port = 7777
-      password = "example"
-      ssl = true
-      auto-join = [ "#example" ]
-    }
-  ]
-}
-```
-
-Compiling
----------
-
-Use Maven 3 to compile the project.
-
-    mvn clean package
-
-
-Running
--------
-
-    java -jar eduardo.jar -c yourconfig
-
-Contributing
-------------
+## License
 
 Eduardo is available under the GNU Lesser General Public License.
 
