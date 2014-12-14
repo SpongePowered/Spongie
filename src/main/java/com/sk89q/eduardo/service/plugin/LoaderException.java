@@ -17,38 +17,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.service.plugin;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+public class LoaderException extends Exception {
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-public class MessageEvent {
-
-    private final Context context;
-    private final String message;
-    private final Response response;
-
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    public LoaderException() {
     }
 
-    public Context getContext() {
-        return context;
+    public LoaderException(String message) {
+        super(message);
     }
 
-    public String getMessage() {
-        return message;
+    public LoaderException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public Response getResponse() {
-        return response;
+    public LoaderException(Throwable cause) {
+        super(cause);
     }
 
 }

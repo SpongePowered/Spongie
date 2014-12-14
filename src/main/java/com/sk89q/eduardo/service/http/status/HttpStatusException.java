@@ -17,38 +17,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.service.http.status;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+public class HttpStatusException extends RuntimeException {
 
-import static com.google.common.base.Preconditions.checkNotNull;
+    private final int code;
 
-public class MessageEvent {
-
-    private final Context context;
-    private final String message;
-    private final Response response;
-
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    public HttpStatusException(int code) {
+        this.code = code;
     }
 
-    public Context getContext() {
-        return context;
+    public HttpStatusException(int code, String message) {
+        super(message);
+        this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public HttpStatusException(int code, String message, Throwable cause) {
+        super(message, cause);
+        this.code = code;
     }
 
-    public Response getResponse() {
-        return response;
+    public HttpStatusException(int code, Throwable cause) {
+        super(cause);
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
     }
 
 }

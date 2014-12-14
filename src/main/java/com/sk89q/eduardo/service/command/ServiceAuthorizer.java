@@ -17,38 +17,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.service.command;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+import com.sk89q.eduardo.service.auth.AuthService;
+import com.sk89q.eduardo.service.auth.Subject;
+import com.sk89q.intake.context.CommandLocals;
+import com.sk89q.intake.util.auth.Authorizer;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+class ServiceAuthorizer implements Authorizer {
 
-public class MessageEvent {
+    private final AuthService authService;
 
-    private final Context context;
-    private final String message;
-    private final Response response;
-
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    ServiceAuthorizer(AuthService authService) {
+        this.authService = authService;
     }
 
-    public Context getContext() {
-        return context;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Response getResponse() {
-        return response;
+    @Override
+    public boolean testPermission(CommandLocals locals, String permission) {
+        Subject subject = locals.get(Subject.class);
+        return subject != null && subject.testPermission(permission);
     }
 
 }

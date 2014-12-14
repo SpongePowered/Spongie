@@ -17,38 +17,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.model.response;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+import com.sk89q.eduardo.util.formatting.StyledFragment;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.sk89q.eduardo.util.formatting.StyledFragment.style;
 
-public class MessageEvent {
+public interface Response {
 
-    private final Context context;
-    private final String message;
-    private final Response response;
+    void respond(StyledFragment fragment);
 
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    void broadcast(StyledFragment fragment);
+
+    default void respond(String message) {
+        respond(style().append(message));
     }
 
-    public Context getContext() {
-        return context;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Response getResponse() {
-        return response;
+    default void broadcast(String message) {
+        broadcast(style().append(message));
     }
 
 }

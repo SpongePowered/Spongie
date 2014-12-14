@@ -17,29 +17,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.service.event;
 
-import com.sk89q.eduardo.util.formatting.StyledFragment;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-public class BroadcastEvent {
+/**
+ * Used to mark methods as event handlers.
+ */
+@Retention(RUNTIME)
+@Target(METHOD)
+public @interface Subscribe {
 
-    private final String target;
-    private final StyledFragment message;
+    /**
+     * The priority as far as order of dispatching is concerned.
+     *
+     * @return the priority
+     */
+    EventHandler.Priority priority() default EventHandler.Priority.NORMAL;
 
-    public BroadcastEvent(String target, StyledFragment message) {
-        checkNotNull(target);
-        checkNotNull(message);
-        this.target = target;
-        this.message = message;
-    }
+    /**
+     * Whether cancelled events should be ignored.
+     *
+     * @return true to ignore cancelled events
+     */
+    boolean ignoreCancelled() default false;
 
-    public String getTarget() {
-        return target;
-    }
-
-    public StyledFragment getMessage() {
-        return message;
-    }
 }

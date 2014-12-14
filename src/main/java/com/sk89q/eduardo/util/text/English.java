@@ -17,38 +17,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.util.text;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+public final class English {
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-public class MessageEvent {
-
-    private final Context context;
-    private final String message;
-    private final Response response;
-
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    private English() {
     }
 
-    public Context getContext() {
-        return context;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Response getResponse() {
-        return response;
+    public static String plural(int count) {
+        return count == 1 ? "" : "s";
     }
 
 }

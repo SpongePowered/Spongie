@@ -17,29 +17,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.model.context;
 
-import com.sk89q.eduardo.util.formatting.StyledFragment;
+import javax.annotation.Nullable;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+public interface User {
 
-public class BroadcastEvent {
+    String getId();
 
-    private final String target;
-    private final StyledFragment message;
+    @Nullable
+    String getLogin();
 
-    public BroadcastEvent(String target, StyledFragment message) {
-        checkNotNull(target);
-        checkNotNull(message);
-        this.target = target;
-        this.message = message;
-    }
+    @Nullable
+    String getHostMask();
 
-    public String getTarget() {
-        return target;
-    }
-
-    public StyledFragment getMessage() {
-        return message;
-    }
 }

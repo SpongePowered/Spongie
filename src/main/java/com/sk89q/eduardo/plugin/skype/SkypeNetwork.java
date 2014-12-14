@@ -17,38 +17,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.plugin.skype;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+import com.sk89q.eduardo.model.context.Network;
+import com.skype.Skype;
+import com.skype.SkypeException;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+class SkypeNetwork implements Network {
 
-public class MessageEvent {
+    static final SkypeNetwork INSTANCE = new SkypeNetwork();
 
-    private final Context context;
-    private final String message;
-    private final Response response;
-
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    private SkypeNetwork() {
     }
 
-    public Context getContext() {
-        return context;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Response getResponse() {
-        return response;
+    @Override
+    public String getId() {
+        try {
+            return Skype.getProfile().getId();
+        } catch (SkypeException e) {
+            return "unknown";
+        }
     }
 
 }

@@ -17,29 +17,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.service.throttle;
 
-import com.sk89q.eduardo.util.formatting.StyledFragment;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface RateLimit {
 
-public class BroadcastEvent {
+    double weight() default 1;
 
-    private final String target;
-    private final StyledFragment message;
-
-    public BroadcastEvent(String target, StyledFragment message) {
-        checkNotNull(target);
-        checkNotNull(message);
-        this.target = target;
-        this.message = message;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public StyledFragment getMessage() {
-        return message;
-    }
 }

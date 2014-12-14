@@ -17,38 +17,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.util.formatting
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+object Message {
 
-import static com.google.common.base.Preconditions.checkNotNull;
+  def styled(): Message = {
+    new Message()
+  }
 
-public class MessageEvent {
+  def bold(content: Any): Message = {
+    new Message(Style.BOLD).append(content)
+  }
 
-    private final Context context;
-    private final String message;
-    private final Response response;
+}
 
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+class Message(styles: Style*) extends StyledFragment(styles.toArray:_*) {
+
+  def +(message: Any): Message = {
+    if (getStyle.isUnstyled) {
+      append(message)
+    } else {
+      new Message().append(this).append(message)
     }
+  }
 
-    public Context getContext() {
-        return context;
-    }
+  override def append(fragment: StyledFragment): Message = {
+    super.append(fragment)
+    this
+  }
 
-    public String getMessage() {
-        return message;
+  override def append(fragment: Any): Message = {
+    fragment match {
+      case f: StyledFragment => super.append(f)
+      case _ => super.append(fragment)
     }
-
-    public Response getResponse() {
-        return response;
-    }
+    this
+  }
 
 }

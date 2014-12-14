@@ -38,7 +38,7 @@ public class StyledFragment extends Fragment {
     public StyledFragment(StyleSet style) {
         this.style = style;
     }
-    
+
     public StyledFragment(Style... styles) {
         this.style = new StyleSet(styles);
     }
@@ -68,12 +68,6 @@ public class StyledFragment extends Fragment {
         this.lastText = text;
         children.add(text);
         return text;
-    }
-
-    public StyledFragment createFragment(Style... styles) {
-        StyledFragment fragment = new StyledFragment(styles);
-        append(fragment);
-        return fragment;
     }
 
     public StyledFragment append(StyledFragment fragment) {
@@ -147,7 +141,7 @@ public class StyledFragment extends Fragment {
         return this;
     }
 
-    public static StyledFragment with(Style... styles) {
+    public static StyledFragment style(Style... styles) {
         return new StyledFragment(styles);
     }
     

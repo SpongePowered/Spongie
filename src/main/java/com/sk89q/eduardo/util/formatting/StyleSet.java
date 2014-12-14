@@ -201,6 +201,10 @@ public class StyleSet {
         return newStyle;
     }
 
+    public boolean isUnstyled() {
+        return bold == null && underline == null && reverse == null && color == null;
+    }
+
     @Override
     public StyleSet clone() {
         StyleSet style = new StyleSet();

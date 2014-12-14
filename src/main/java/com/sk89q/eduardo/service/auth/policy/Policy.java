@@ -17,29 +17,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.service.auth.policy;
 
-import com.sk89q.eduardo.util.formatting.StyledFragment;
+import java.util.function.Predicate;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+public interface Policy<T> {
 
-public class BroadcastEvent {
+    void grant(String permission, Predicate<T> predicate);
 
-    private final String target;
-    private final StyledFragment message;
+    void deny(String permission, Predicate<T> predicate);
 
-    public BroadcastEvent(String target, StyledFragment message) {
-        checkNotNull(target);
-        checkNotNull(message);
-        this.target = target;
-        this.message = message;
-    }
+    boolean testPermission(String permission, T context);
 
-    public String getTarget() {
-        return target;
-    }
-
-    public StyledFragment getMessage() {
-        return message;
-    }
 }

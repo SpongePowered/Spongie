@@ -17,38 +17,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.model.context;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+public final class Users {
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-public class MessageEvent {
-
-    private final Context context;
-    private final String message;
-    private final Response response;
-
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    private Users() {
     }
 
-    public Context getContext() {
-        return context;
+    public static String getUserMask(User user) {
+        return user.getId() + "!" + user.getLogin() + "@" + user.getHostMask();
     }
 
-    public String getMessage() {
-        return message;
+    public static String mangleName(String name) {
+        if (name.length() >= 2) {
+            return name.charAt(0) + "\u200B" + name.substring(1);
+        } else {
+            return name;
+        }
     }
-
-    public Response getResponse() {
-        return response;
-    }
-
 }

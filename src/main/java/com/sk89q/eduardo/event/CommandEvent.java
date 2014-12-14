@@ -19,11 +19,8 @@
 
 package com.sk89q.eduardo.event;
 
-import com.sk89q.eduardo.context.Context;
-import com.sk89q.eduardo.helper.Response;
-
-import java.util.HashSet;
-import java.util.Set;
+import com.sk89q.eduardo.model.context.Context;
+import com.sk89q.eduardo.model.response.Response;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -31,34 +28,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class CommandEvent implements Cancellable {
 
     private final Response response;
-    private final Context primaryContext;
-    private final Set<Context> contexts = new HashSet<>();
+    private final Context context;
     private final String arguments;
     private final int depth;
     private boolean cancelled;
 
-    public CommandEvent(Context primaryContext, String arguments, Response response) {
-        this(primaryContext, arguments, response, 0);
+    public CommandEvent(Context context, String arguments, Response response) {
+        this(context, arguments, response, 0);
     }
 
-    public CommandEvent(Context primaryContext, String arguments, Response response, int depth) {
-        checkNotNull(primaryContext);
+    public CommandEvent(Context context, String arguments, Response response, int depth) {
+        checkNotNull(context);
         checkNotNull(arguments);
         checkNotNull(response);
         checkArgument(depth >= 0, "depth must be >= 0");
-        this.primaryContext = primaryContext;
+        this.context = context;
         this.response = response;
         this.arguments = arguments;
         this.depth = depth;
-        this.contexts.add(primaryContext);
     }
 
-    public Context getPrimaryContext() {
-        return primaryContext;
-    }
-
-    public Set<Context> getContexts() {
-        return contexts;
+    public Context getContext() {
+        return context;
     }
 
     public String getArguments() {

@@ -17,38 +17,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.service.http.status;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+public class InternalServerError extends HttpStatusException {
 
-public class MessageEvent {
-
-    private final Context context;
-    private final String message;
-    private final Response response;
-
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    public InternalServerError() {
+        super(SC_INTERNAL_SERVER_ERROR);
     }
 
-    public Context getContext() {
-        return context;
+    public InternalServerError(String message) {
+        super(SC_INTERNAL_SERVER_ERROR, message);
     }
 
-    public String getMessage() {
-        return message;
+    public InternalServerError(String message, Throwable cause) {
+        super(SC_INTERNAL_SERVER_ERROR, message, cause);
     }
 
-    public Response getResponse() {
-        return response;
+    public InternalServerError(Throwable cause) {
+        super(SC_INTERNAL_SERVER_ERROR, cause);
     }
 
 }

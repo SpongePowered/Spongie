@@ -17,38 +17,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.util;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+import java.util.regex.Pattern;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+public final class GitUtils {
 
-public class MessageEvent {
+    private static final Pattern REF_CLEANUP = Pattern.compile("^refs/heads/");
+    private static final Pattern COMMIT_CLEANUP = Pattern.compile("[\r\n].*$", Pattern.DOTALL);
+    private static final int COMMIT_MAX_LEN = 80;
 
-    private final Context context;
-    private final String message;
-    private final Response response;
-
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    private GitUtils() {
     }
 
-    public Context getContext() {
-        return context;
+    public static String shortenHash(String s) {
+        return s.substring(0, 8);
     }
 
-    public String getMessage() {
-        return message;
+    public static String shortenRef(String s) {
+        return REF_CLEANUP.matcher(s).replaceAll("");
     }
 
-    public Response getResponse() {
-        return response;
+    public static String shortenMessage(String s) {
+        s = COMMIT_CLEANUP.matcher(s).replaceAll("");
+        if (s.length() > COMMIT_MAX_LEN) {
+            s = s.substring(0, COMMIT_MAX_LEN) + "...";
+        }
+        return s;
     }
 
 }

@@ -17,38 +17,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.plugin.skype;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+import com.sk89q.eduardo.model.context.Room;
+import com.skype.Chat;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+class SkypeRoom implements Room {
 
-public class MessageEvent {
+    private final Chat chat;
 
-    private final Context context;
-    private final String message;
-    private final Response response;
-
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    SkypeRoom(Chat chat) {
+        this.chat = chat;
     }
 
-    public Context getContext() {
-        return context;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Response getResponse() {
-        return response;
+    @Override
+    public String getId() {
+        return chat.getId();
     }
 
 }

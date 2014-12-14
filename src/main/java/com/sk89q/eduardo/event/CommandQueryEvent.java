@@ -17,38 +17,54 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.event;
 
 import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+
+import javax.annotation.Nullable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class MessageEvent {
+public class CommandQueryEvent implements Cancellable {
 
     private final Context context;
-    private final String message;
-    private final Response response;
+    private final String command;
+    @Nullable
+    private String desc = null;
+    private boolean cancelled;
 
-    public MessageEvent(Context context, String message, Response response) {
+    public CommandQueryEvent(Context context, String command) {
         checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
+        checkNotNull(command);
         this.context = context;
-        this.message = message;
-        this.response = response;
+        this.command = command;
     }
 
     public Context getContext() {
         return context;
     }
 
-    public String getMessage() {
-        return message;
+    public String getCommand() {
+        return command;
     }
 
-    public Response getResponse() {
-        return response;
+    @Nullable
+    public String getDescription() {
+        return desc;
+    }
+
+    public void setDescription(String desc) {
+        this.desc = desc;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
 }

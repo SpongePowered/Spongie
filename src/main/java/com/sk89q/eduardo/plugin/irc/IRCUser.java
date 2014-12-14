@@ -17,38 +17,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.plugin.irc;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+import com.sk89q.eduardo.model.context.User;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import javax.annotation.Nullable;
 
-public class MessageEvent {
+class IRCUser implements User {
 
-    private final Context context;
-    private final String message;
-    private final Response response;
+    private final org.pircbotx.User user;
 
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    IRCUser(org.pircbotx.User user) {
+        this.user = user;
     }
 
-    public Context getContext() {
-        return context;
+    @Override
+    public String getId() {
+        return user.getNick();
     }
 
-    public String getMessage() {
-        return message;
+    @Nullable
+    @Override
+    public String getLogin() {
+        return user.getLogin();
     }
 
-    public Response getResponse() {
-        return response;
+    @Nullable
+    @Override
+    public String getHostMask() {
+        return user.getHostmask();
     }
 
 }

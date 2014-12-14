@@ -17,29 +17,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.plugin.google
 
-import com.sk89q.eduardo.util.formatting.StyledFragment;
+/* YouTube */
 
-import static com.google.common.base.Preconditions.checkNotNull;
+case class Snippet(title: String, description: String)
 
-public class BroadcastEvent {
+case class VideoId(videoId: String)
 
-    private final String target;
-    private final StyledFragment message;
+case class Video(id: VideoId, channelTitle: String, snippet: Snippet)
 
-    public BroadcastEvent(String target, StyledFragment message) {
-        checkNotNull(target);
-        checkNotNull(message);
-        this.target = target;
-        this.message = message;
-    }
+case class VideoList(items: List[Video])
 
-    public String getTarget() {
-        return target;
-    }
+/* Google Search */
 
-    public StyledFragment getMessage() {
-        return message;
-    }
-}
+case class Result(title: String, link: String, snippet: String)
+
+case class SearchResult(items: List[Result])

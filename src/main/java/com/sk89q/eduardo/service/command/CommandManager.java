@@ -17,29 +17,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.service.command;
 
-import com.sk89q.eduardo.util.formatting.StyledFragment;
+import com.google.inject.ImplementedBy;
+import com.sk89q.intake.dispatcher.Dispatcher;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+@ImplementedBy(SimpleCommandManager.class)
+public interface CommandManager {
 
-public class BroadcastEvent {
+    public Dispatcher getDispatcher();
 
-    private final String target;
-    private final StyledFragment message;
+    public void register(Object object);
 
-    public BroadcastEvent(String target, StyledFragment message) {
-        checkNotNull(target);
-        checkNotNull(message);
-        this.target = target;
-        this.message = message;
-    }
+    public String removePrefix(String arguments);
 
-    public String getTarget() {
-        return target;
-    }
-
-    public StyledFragment getMessage() {
-        return message;
-    }
 }

@@ -17,29 +17,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.plugin
 
-import com.sk89q.eduardo.util.formatting.StyledFragment;
+import com.google.inject.Singleton
+import com.sk89q.eduardo.model.response.Response
+import com.sk89q.eduardo.service.auth.Subject
+import com.sk89q.eduardo.service.throttle.RateLimit
+import com.sk89q.eduardo.service.plugin.Plugin
+import com.sk89q.intake.{Command, Require}
 
-import static com.google.common.base.Preconditions.checkNotNull;
+@Plugin(id = "perms-tester")
+@Singleton
+class AuthQuery {
 
-public class BroadcastEvent {
+  @Command(aliases = Array("permissions:test", "testperm"), desc = "Test a permission")
+  @Require(Array("permissions.test"))
+  @RateLimit def testPermission(subject: Subject, response: Response, permission: String) {
+    response.respond("evaluates to " + subject.testPermission(permission))
+  }
 
-    private final String target;
-    private final StyledFragment message;
-
-    public BroadcastEvent(String target, StyledFragment message) {
-        checkNotNull(target);
-        checkNotNull(message);
-        this.target = target;
-        this.message = message;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public StyledFragment getMessage() {
-        return message;
-    }
 }

@@ -6,6 +6,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'scala'
 apply plugin: 'maven'
 apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -28,13 +29,16 @@ jar {
 }
 
 dependencies {
+    compile 'org.scala-lang:scala-library:2.11.4'
+
     // Basic libraries
     compile 'org.slf4j:slf4j-jdk14:1.7.7'
     compile 'com.google.guava:guava:18.0'
     compile 'commons-codec:commons-codec:1.9'
     compile 'com.google.code.findbugs:jsr305:3.0.0' // @Nullable
     compile 'com.google.inject:guice:4.0-beta4' // Dependency injection
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.0' // JSON
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4' // JSON
+    compile 'com.fasterxml.jackson.module:jackson-module-scala_2.11:2.4.4'
     compile 'com.sk89q:intake:3.1.1-SNAPSHOT' // Commands
     compile 'com.typesafe:config:1.2.1'
     compile 'com.beust:jcommander:1.35' // Command line args
@@ -43,7 +47,7 @@ dependencies {
     compile 'com.sparkjava:spark-template-mustache:1.0.0'
     compile 'org.apache.httpcomponents:httpclient:4.3.6' // HTTP
     compile 'org.apache.httpcomponents:fluent-hc:4.3.6'
-
+    compile 'org.yaml:snakeyaml:1.14'
     // Persistence
     compile 'org.jooq:jooq:3.4.2' // SQL abstraction
     compile 'org.jooq:jooq-meta:3.4.2'
@@ -60,13 +64,16 @@ dependencies {
 
     // Modules
     compile 'com.rosaloves:bitlyj:2.0.0'
-    compile 'com.google.apis:google-api-services-customsearch:v1-rev46-1.19.0'
 
     // Tests
     testCompile('junit:junit:4.11') {
         exclude(module: 'hamcrest-core')
     }
     testCompile 'org.hamcrest:hamcrest-library:1.2.1'
+}
+
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.useAnt = false
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

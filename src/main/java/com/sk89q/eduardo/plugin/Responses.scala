@@ -17,29 +17,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.plugin
 
-import com.sk89q.eduardo.util.formatting.StyledFragment;
+import com.google.inject.Singleton
+import com.sk89q.eduardo.model.response.Response
+import com.sk89q.eduardo.service.throttle.RateLimit
+import com.sk89q.eduardo.service.plugin.Plugin
+import com.sk89q.intake.Command
+import com.sk89q.intake.parametric.annotation.Text
 
-import static com.google.common.base.Preconditions.checkNotNull;
+@Plugin(id = "responses")
+@Singleton
+class Responses {
 
-public class BroadcastEvent {
+  @Command(aliases = Array("respond"), desc = "Respond with a message")
+  @RateLimit def respond(response: Response, @Text message: String) {
+    response.respond(message)
+  }
 
-    private final String target;
-    private final StyledFragment message;
+  @Command(aliases = Array("say"), desc = "Say a message")
+  @RateLimit def say(response: Response, @Text message: String) {
+    response.broadcast(message)
+  }
 
-    public BroadcastEvent(String target, StyledFragment message) {
-        checkNotNull(target);
-        checkNotNull(message);
-        this.target = target;
-        this.message = message;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public StyledFragment getMessage() {
-        return message;
-    }
 }

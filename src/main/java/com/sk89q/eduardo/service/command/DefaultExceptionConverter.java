@@ -17,38 +17,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.service.command;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+import com.sk89q.intake.CommandException;
+import com.sk89q.intake.parametric.handler.ExceptionConverterHelper;
+import com.sk89q.intake.parametric.handler.ExceptionMatch;
+import com.sk89q.intake.util.auth.AuthorizationException;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+public class DefaultExceptionConverter extends ExceptionConverterHelper {
 
-public class MessageEvent {
-
-    private final Context context;
-    private final String message;
-    private final Response response;
-
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    @ExceptionMatch
+    public void convert(AuthorizationException e) throws AuthorizationException {
+        throw e;
     }
 
-    public Context getContext() {
-        return context;
+    @ExceptionMatch
+    public void convert(CommandException e) throws CommandException {
+        throw e;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public Response getResponse() {
-        return response;
-    }
 
 }

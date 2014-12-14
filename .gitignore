@@ -124,6 +124,7 @@ gradle-app.setting
 
 ### Project ###
 /*.conf
+/*.yml
 !/example.conf
 /dependency-reduced-pom.xml
 /data

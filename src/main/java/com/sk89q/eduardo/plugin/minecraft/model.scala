@@ -17,29 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.plugin.minecraft
 
-import com.sk89q.eduardo.util.formatting.StyledFragment;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
-public class BroadcastEvent {
-
-    private final String target;
-    private final StyledFragment message;
-
-    public BroadcastEvent(String target, StyledFragment message) {
-        checkNotNull(target);
-        checkNotNull(message);
-        this.target = target;
-        this.message = message;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public StyledFragment getMessage() {
-        return message;
-    }
-}
+case class Identity(id: String, name: String)

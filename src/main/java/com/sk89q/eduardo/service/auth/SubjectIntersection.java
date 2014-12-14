@@ -17,38 +17,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.eduardo.event.message;
+package com.sk89q.eduardo.service.auth;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.model.response.Response;
+import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+public class SubjectIntersection implements Subject {
 
-public class MessageEvent {
+    private final List<Subject> subjects;
 
-    private final Context context;
-    private final String message;
-    private final Response response;
-
-    public MessageEvent(Context context, String message, Response response) {
-        checkNotNull(context);
-        checkNotNull(message);
-        checkNotNull(response);
-        this.context = context;
-        this.message = message;
-        this.response = response;
+    public SubjectIntersection(List<Subject> subjects) {
+        this.subjects = subjects;
     }
 
-    public Context getContext() {
-        return context;
-    }
+    @Override
+    public boolean testPermission(String permission) {
+        boolean pass = false;
 
-    public String getMessage() {
-        return message;
-    }
+        for (Subject subject : subjects) {
+            if (subject.testPermission(permission)) {
+                pass = true;
+            } else {
+                return false;
+            }
+        }
 
-    public Response getResponse() {
-        return response;
+        return pass;
     }
 
 }
