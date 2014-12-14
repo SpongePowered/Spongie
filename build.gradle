@@ -78,10 +78,6 @@ dependencies {
     testCompile 'org.hamcrest:hamcrest-library:1.2.1'
 }
 
-tasks.withType(ScalaCompile) {
-    scalaCompileOptions.useAnt = false
-}
-
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
