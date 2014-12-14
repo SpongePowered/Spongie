@@ -1,13 +1,14 @@
 Eduardo
 =======
 
-Eduardo is a command and chat bot written in Java.
+Eduardo is a command and chat bot written in Java and Scala.
 
-* Connects to IRC, Skype, and anything that you want to throw at it
-* Embedded web server
-* Extremely simple architecture
-* Extremely powerful
+* Multi-server and multi-network
+* Embedded web server (optional)
+* Flexible and extensible
 * Access to Java's huge 3rd party library ecosystem
+
+**WARNING:** The bot is under development and is subject to massive changes with no notice.  There are currently some unfinished parts that exist in a state merely to get everything else working.
 
 ## Usage
 
