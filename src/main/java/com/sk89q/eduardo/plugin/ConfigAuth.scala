@@ -61,7 +61,7 @@ class ConfigAuth @Inject() (config: Config) extends AuthService {
   }
 
   def login(context: Context): Subject = {
-    new ConfigAuth#ConfigSubject(context)
+    new ConfigSubject(context)
   }
 
   private class ConfigSubject(context: Context) extends Subject {
