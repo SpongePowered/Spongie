@@ -19,9 +19,16 @@
 
 package com.sk89q.eduardo.util.config;
 
-public interface ConfigFile extends Config {
+import java.util.Arrays;
+import java.util.List;
 
-    boolean load();
+public final class Configs {
 
-    boolean save();
+    private Configs() {
+    }
+
+    public static List<String> splitPath(String path) {
+        return Arrays.asList(path.split("\\."));
+    }
+
 }

@@ -19,9 +19,38 @@
 
 package com.sk89q.eduardo.util.config;
 
-public interface ConfigFile extends Config {
+import javax.annotation.Nullable;
 
-    boolean load();
+public class FallbackConfig extends AbstractConfig {
 
-    boolean save();
+    private final Config config;
+    private final Config fallback;
+
+    public FallbackConfig(Config config, Config fallback) {
+        this.config = config;
+        this.fallback = fallback;
+    }
+
+    @Nullable
+    @Override
+    public Object get(String path) {
+        Object object = config.get(path);
+        if (object != null) {
+            return object;
+        } else {
+            return fallback.get(path);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Object put(String path, Object value) {
+        return config.put(path, value);
+    }
+
+    @Override
+    public ConfigObject toObject() {
+        return config.toObject();
+    }
+
 }
