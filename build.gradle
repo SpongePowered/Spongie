@@ -16,6 +16,11 @@ version = '1.1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+sourceSets.main.scala.srcDir "src/main/java"
+sourceSets.main.java.srcDirs = []
+sourceSets.test.scala.srcDir "src/test/java"
+sourceSets.test.java.srcDirs = []
+
 repositories {
     mavenCentral()
     maven { url "http://maven.sk89q.com/repo/" }
@@ -48,6 +53,7 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.3.6' // HTTP
     compile 'org.apache.httpcomponents:fluent-hc:4.3.6'
     compile 'org.yaml:snakeyaml:1.14'
+
     // Persistence
     compile 'org.jooq:jooq:3.4.2' // SQL abstraction
     compile 'org.jooq:jooq-meta:3.4.2'
