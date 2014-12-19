@@ -19,13 +19,13 @@
 
 package com.sk89q.eduardo.service.shortener;
 
-import com.google.inject.ImplementedBy;
-
 import java.net.URL;
 
-@ImplementedBy(DummyShortener.class)
-public interface URLShortener {
+public class DummyShortener implements URLShortener {
 
-    URL shorten(URL url);
+    @Override
+    public URL shorten(URL url) {
+        return url;
+    }
 
 }
