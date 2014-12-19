@@ -22,11 +22,7 @@ package com.sk89q.eduardo.service.event;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 
 /**
  * Holds a cache of class hierarchy.

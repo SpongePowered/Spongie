@@ -21,10 +21,8 @@ package com.sk89q.eduardo.plugin.minecraft
 
 import java.net.URLEncoder
 
-import com.google.inject.Singleton
 import com.sk89q.eduardo.model.response.Response
 import com.sk89q.eduardo.service.plugin.Plugin
-import com.sk89q.eduardo.service.throttle.RateLimit
 import com.sk89q.eduardo.util.APIException
 import com.sk89q.eduardo.util.http.Requests
 import com.sk89q.intake.{Command, Require}
@@ -35,7 +33,6 @@ class ProfileLookup {
 
   @Command(aliases = Array("minecraft:uuid", "mcuuid"), desc = "Lookup a Minecraft user's UUID")
   @Require(Array("minecraft.uuid"))
-  @RateLimit(weight = 2)
   def uuidCommand(response: Response, name: String) = {
     getIdentity(name) match {
       case Some(identity) => response.respond(s"${identity.name} -> ${identity.id}")
@@ -45,7 +42,6 @@ class ProfileLookup {
 
   @Command(aliases = Array("minecraft:names", "mcnames"), desc = "Lookup a Minecraft user's names")
   @Require(Array("minecraft.names"))
-  @RateLimit(weight = 2)
   def namesCommand(response: Response, uuid: String): Unit = {
     var target = uuid.replace("-", "").toLowerCase
 

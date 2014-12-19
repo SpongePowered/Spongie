@@ -19,10 +19,9 @@
 
 package com.sk89q.eduardo.plugin.google
 
-import com.google.inject.{Inject, Singleton}
+import com.google.inject.Inject
 import com.sk89q.eduardo.model.response.Response
 import com.sk89q.eduardo.service.plugin.Plugin
-import com.sk89q.eduardo.service.throttle.RateLimit
 import com.sk89q.eduardo.util.APIException
 import com.sk89q.eduardo.util.config.Config
 import com.sk89q.eduardo.util.http.Requests
@@ -37,7 +36,6 @@ class Search @Inject() (config: Config) {
 
   @Command(aliases = Array("google:search", "google", "g"), desc = "Search Google for a query")
   @Require(Array("google.search"))
-  @RateLimit(weight = 2)
   def searchCommand(r: Response, @Text query: String) {
     search(query) match {
       case Some(item) => r.broadcast(item.link + " -- " + item.title + " -- " + item.snippet)

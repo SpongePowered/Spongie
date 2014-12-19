@@ -19,10 +19,9 @@
 
 package com.sk89q.eduardo.plugin.google
 
-import com.google.inject.{Inject, Singleton}
+import com.google.inject.Inject
 import com.sk89q.eduardo.model.response.Response
 import com.sk89q.eduardo.service.plugin.Plugin
-import com.sk89q.eduardo.service.throttle.RateLimit
 import com.sk89q.eduardo.util.APIException
 import com.sk89q.eduardo.util.config.Config
 import com.sk89q.eduardo.util.http.Requests
@@ -36,7 +35,6 @@ class YouTube @Inject() (config: Config) {
 
   @Command(aliases = Array("youtube:search", "yt", "youtube"), desc = "Search YouTube for a video")
   @Require(Array("youtube.search"))
-  @RateLimit(weight = 2)
   def youtubeCommand(r: Response, @Text query: String): Unit = {
     findFirstVideo(query) match {
       case Some(result) => r.broadcast(

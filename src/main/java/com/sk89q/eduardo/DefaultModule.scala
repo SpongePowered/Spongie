@@ -22,9 +22,9 @@ package com.sk89q.eduardo
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
-import com.google.inject.{Scopes, AbstractModule, Provides, Singleton}
+import com.google.inject.{AbstractModule, Provides, Scopes, Singleton}
 import com.sk89q.eduardo.service.event.EventBus
-import com.sk89q.eduardo.service.plugin.{Plugin, LoadablePlugin}
+import com.sk89q.eduardo.service.plugin.{LoadablePlugin, Plugin}
 import com.sk89q.eduardo.util.config.{Config, ConfigFile}
 import org.slf4j.LoggerFactory
 

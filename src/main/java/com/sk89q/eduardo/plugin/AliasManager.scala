@@ -21,7 +21,7 @@ package com.sk89q.eduardo.plugin
 
 import java.util
 
-import com.google.inject.{Inject, Singleton}
+import com.google.inject.Inject
 import com.sk89q.eduardo.event.{CommandEvent, CommandQueryEvent}
 import com.sk89q.eduardo.model.context.Context
 import com.sk89q.eduardo.model.response.Response

@@ -19,11 +19,10 @@
 
 package com.sk89q.eduardo.plugin.music
 
-import com.google.inject.{Inject, Singleton}
+import com.google.inject.Inject
 import com.sk89q.eduardo.model.response.Response
 import com.sk89q.eduardo.service.plugin.Plugin
 import com.sk89q.eduardo.service.shortener.URLShortener
-import com.sk89q.eduardo.service.throttle.RateLimit
 import com.sk89q.eduardo.util.APIException
 import com.sk89q.eduardo.util.config.Config
 import com.sk89q.eduardo.util.http.Requests
@@ -38,7 +37,6 @@ class MusicLookup @Inject() (config: Config, shorterner: URLShortener) {
 
   @Command(aliases = Array("music:artist", "artist"), desc = "Lookup info about a music artist")
   @Require(Array("music.artist"))
-  @RateLimit(weight = 2)
   def artistCommand(response: Response, @Text query: String) = {
     findArtists(query) match {
       case Nil => response.respond(s"No artists matched '$query'")

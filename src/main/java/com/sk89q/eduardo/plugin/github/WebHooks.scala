@@ -27,7 +27,7 @@ import javax.crypto.spec.SecretKeySpec
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.collect.{HashMultimap, Multimap}
 import com.google.common.io.ByteStreams
-import com.google.inject.{Inject, Singleton}
+import com.google.inject.Inject
 import com.sk89q.eduardo.event.ConfigureEvent
 import com.sk89q.eduardo.event.http.ConfigureRouteEvent
 import com.sk89q.eduardo.model.context.Users.mangleName

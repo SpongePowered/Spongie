@@ -22,10 +22,9 @@ package com.sk89q.eduardo.plugin.grooveshark
 import java.net.URLEncoder
 
 import com.fasterxml.jackson.databind.JsonMappingException
-import com.google.inject.{Inject, Singleton}
+import com.google.inject.Inject
 import com.sk89q.eduardo.model.response.Response
 import com.sk89q.eduardo.service.plugin.Plugin
-import com.sk89q.eduardo.service.throttle.RateLimit
 import com.sk89q.eduardo.util.APIException
 import com.sk89q.eduardo.util.config.Config
 import com.sk89q.eduardo.util.http.Requests
@@ -40,7 +39,6 @@ class Grooveshark @Inject() (config: Config)  {
 
   @Command(aliases = Array("grooveshark:search", "grooveshark", "gs"), desc = "Find a song on Grooveshark")
   @Require(Array("grooveshark.search"))
-  @RateLimit(weight = 2)
   def findCommand(r: Response, @Text query: String) {
     findFirstSong(query) match {
       case Some(track) => r.broadcast(track.url + " -- " + track.artist + " - " + track.title)

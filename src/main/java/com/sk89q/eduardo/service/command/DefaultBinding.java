@@ -19,10 +19,10 @@
 
 package com.sk89q.eduardo.service.command;
 
-import com.sk89q.eduardo.model.context.Context;
-import com.sk89q.eduardo.service.auth.Subject;
 import com.sk89q.eduardo.event.CommandEvent;
+import com.sk89q.eduardo.model.context.Context;
 import com.sk89q.eduardo.model.response.Response;
+import com.sk89q.eduardo.service.auth.Subject;
 import com.sk89q.intake.context.CommandLocals;
 import com.sk89q.intake.parametric.ParameterException;
 import com.sk89q.intake.parametric.argument.ArgumentStack;
