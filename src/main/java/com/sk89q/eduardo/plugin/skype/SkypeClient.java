@@ -20,15 +20,14 @@
 package com.sk89q.eduardo.plugin.skype;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.sk89q.eduardo.event.StartupEvent;
 import com.sk89q.eduardo.event.message.MessageEvent;
 import com.sk89q.eduardo.model.context.Context;
 import com.sk89q.eduardo.model.context.Mode;
 import com.sk89q.eduardo.model.response.AbstractDirectResponse;
-import com.sk89q.eduardo.service.plugin.Plugin;
 import com.sk89q.eduardo.service.event.EventBus;
 import com.sk89q.eduardo.service.event.Subscribe;
+import com.sk89q.eduardo.service.plugin.Plugin;
 import com.sk89q.eduardo.util.formatting.Fragments;
 import com.sk89q.eduardo.util.formatting.StyledFragment;
 import com.skype.ChatMessage;
@@ -41,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 
 @Plugin(id = "skype")
-@Singleton
 public class SkypeClient {
 
     private static final Logger log = LoggerFactory.getLogger(SkypeClient.class);

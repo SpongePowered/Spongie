@@ -20,13 +20,12 @@
 package com.sk89q.eduardo.service.http;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.sk89q.eduardo.event.StartupEvent;
 import com.sk89q.eduardo.event.http.ConfigureRouteEvent;
-import com.sk89q.eduardo.service.plugin.Plugin;
 import com.sk89q.eduardo.service.event.EventBus;
 import com.sk89q.eduardo.service.event.Subscribe;
 import com.sk89q.eduardo.service.http.status.HttpStatusException;
+import com.sk89q.eduardo.service.plugin.Plugin;
 import com.sk89q.eduardo.util.config.Config;
 
 import java.net.UnknownHostException;
@@ -36,7 +35,6 @@ import static com.sk89q.eduardo.service.http.SparkUtils.render;
 import static spark.Spark.*;
 
 @Plugin(id = "http-server")
-@Singleton
 public class JettyServer {
 
     @Inject private Config config;

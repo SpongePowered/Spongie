@@ -34,7 +34,6 @@ import com.sk89q.intake.{Command, CommandMapping, Require}
 import scala.collection.JavaConversions._
 
 @Plugin(id = "help")
-@Singleton
 class CommandHelp @Inject() (commandManager: CommandManager) {
 
   def getBestAlias(aliases: Array[String]): String = {

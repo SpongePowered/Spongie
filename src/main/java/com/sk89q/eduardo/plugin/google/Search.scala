@@ -30,7 +30,6 @@ import com.sk89q.intake.parametric.annotation.Text
 import com.sk89q.intake.{Command, Require}
 
 @Plugin(id = "google-search")
-@Singleton
 class Search @Inject() (config: Config) {
 
   val apiKey = config.stringAt("google-search.api-key", "")

@@ -27,7 +27,6 @@ import com.sk89q.intake.Command
 import com.sk89q.intake.parametric.annotation.Text
 
 @Plugin(id = "responses")
-@Singleton
 class Responses {
 
   @Command(aliases = Array("respond"), desc = "Respond with a message")

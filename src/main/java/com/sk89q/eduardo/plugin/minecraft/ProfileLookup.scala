@@ -31,7 +31,6 @@ import com.sk89q.intake.{Command, Require}
 import org.apache.http.HttpStatus
 
 @Plugin(id = "minecraft-accounts")
-@Singleton
 class ProfileLookup {
 
   @Command(aliases = Array("minecraft:uuid", "mcuuid"), desc = "Lookup a Minecraft user's UUID")

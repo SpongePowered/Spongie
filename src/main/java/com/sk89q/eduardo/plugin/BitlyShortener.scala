@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory
 
 @Plugin(id = "bitly")
 @Provides(Array(classOf[URLShortener]))
-@Singleton
 class BitlyShortener @Inject() (config: Config) extends URLShortener {
 
   val log = LoggerFactory.getLogger(classOf[BitlyShortener])

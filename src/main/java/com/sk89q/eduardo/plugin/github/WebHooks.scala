@@ -50,9 +50,8 @@ import scala.collection.JavaConversions._
 import scala.util.control.Breaks._
 
 @Plugin(id = "github-webhooks")
-@Singleton
-class WebHooks @Inject()(config: Config, mapper: ObjectMapper,
-                         shortener: URLShortener, broadcast: GenericBroadcast) {
+class WebHooks @Inject() (config: Config, mapper: ObjectMapper,
+                                   shortener: URLShortener, broadcast: GenericBroadcast) {
 
   val maxCommitsToAnnounce: Supplier[Integer] = config.intAt("github-webhook.max-commits-to-announce", 5)
   val sigPattern: Pattern = Pattern.compile("^([^=]+)=(.+)$")

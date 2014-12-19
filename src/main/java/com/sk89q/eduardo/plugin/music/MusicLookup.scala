@@ -32,7 +32,6 @@ import com.sk89q.intake.{Command, Require}
 import org.apache.http.HttpStatus
 
 @Plugin(id = "music")
-@Singleton
 class MusicLookup @Inject() (config: Config, shorterner: URLShortener) {
 
   val apiKey = config.stringAt("echonest.api-key", "")

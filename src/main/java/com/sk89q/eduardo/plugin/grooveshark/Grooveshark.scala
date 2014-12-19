@@ -34,7 +34,6 @@ import com.sk89q.intake.{Command, Require}
 import org.apache.http.HttpStatus
 
 @Plugin(id = "grooveshark")
-@Singleton
 class Grooveshark @Inject() (config: Config)  {
 
   val apiKey = config.stringAt("grooveshark.api-key", "")
