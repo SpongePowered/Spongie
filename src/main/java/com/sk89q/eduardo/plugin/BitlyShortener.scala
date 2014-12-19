@@ -26,13 +26,12 @@ import com.rosaloves.bitlyj.Bitly.Provider
 import com.rosaloves.bitlyj.{Bitly, BitlyException, ShortenedUrl}
 import com.sk89q.eduardo.event.ConfigureEvent
 import com.sk89q.eduardo.service.event.Subscribe
-import com.sk89q.eduardo.service.plugin.{Plugin, Provides}
+import com.sk89q.eduardo.service.plugin.Plugin
 import com.sk89q.eduardo.service.shortener.URLShortener
 import com.sk89q.eduardo.util.config.Config
 import org.slf4j.LoggerFactory
 
-@Plugin(id = "bitly")
-@Provides(Array(classOf[URLShortener]))
+@Plugin(id = "bitly", provides = Array(classOf[URLShortener]))
 class BitlyShortener @Inject() (config: Config) extends URLShortener {
 
   val log = LoggerFactory.getLogger(classOf[BitlyShortener])

@@ -56,14 +56,16 @@ import org.slf4j.LoggerFactory
     log.info(s"Searching loaded libraries for known plugins...")
     val loader = new PluginLoader(config)
     loader.scanClassPath()
-    val loadable = loader.getLoadable
-
-    val injector = Guice.createInjector(new DefaultModule(config, loadable))
 
     try {
+      val loadable = loader.getLoadable
+      val injector = Guice.createInjector(new DefaultModule(config, loadable))
       injector.getInstance(classOf[Eduardo]).load(loadable)
     } catch {
-      case e: LoaderException => log.error("Failed to load the application", e)
+      case e: LoaderException =>
+        log.error("Failed to load the application")
+        log.error(e.getMessage)
+        log.info("Now quitting...")
       case e: Exception => log.error("Failed to load the application due to an unexpected error", e)
     }
   }
