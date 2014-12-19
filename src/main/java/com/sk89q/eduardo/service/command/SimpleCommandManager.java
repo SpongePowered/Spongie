@@ -20,7 +20,6 @@
 package com.sk89q.eduardo.service.command;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.sk89q.eduardo.event.CommandEvent;
 import com.sk89q.eduardo.event.CommandQueryEvent;
 import com.sk89q.eduardo.event.message.MessageEvent;
@@ -49,7 +48,6 @@ import org.slf4j.LoggerFactory;
 import java.util.function.Supplier;
 
 @Plugin(id = "command-manager")
-@Singleton
 public class SimpleCommandManager implements CommandManager {
 
     private static final Logger log = LoggerFactory.getLogger(CommandManager.class);

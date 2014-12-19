@@ -22,9 +22,9 @@ package com.sk89q.eduardo
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
-import com.google.inject.{AbstractModule, Provides, Singleton}
+import com.google.inject.{Scopes, AbstractModule, Provides, Singleton}
 import com.sk89q.eduardo.service.event.EventBus
-import com.sk89q.eduardo.service.plugin.LoadablePlugin
+import com.sk89q.eduardo.service.plugin.{Plugin, LoadablePlugin}
 import com.sk89q.eduardo.util.config.{Config, ConfigFile}
 import org.slf4j.LoggerFactory
 
@@ -33,6 +33,7 @@ class DefaultModule(config: ConfigFile, loadable: List[LoadablePlugin]) extends 
   val log = LoggerFactory.getLogger(classOf[DefaultModule])
 
   protected def configure() {
+    bindScope(classOf[Plugin], Scopes.SINGLETON)
     bind(classOf[EventBus]).toInstance(new EventBus)
     bind(classOf[Config]).toInstance(config)
     bind(classOf[ConfigFile]).toInstance(config)

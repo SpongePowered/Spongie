@@ -19,15 +19,13 @@
 
 package com.sk89q.eduardo.plugin
 
-import com.google.inject.Singleton
 import com.sk89q.eduardo.model.response.Response
 import com.sk89q.eduardo.service.auth.Subject
-import com.sk89q.eduardo.service.throttle.RateLimit
 import com.sk89q.eduardo.service.plugin.Plugin
+import com.sk89q.eduardo.service.throttle.RateLimit
 import com.sk89q.intake.{Command, Require}
 
 @Plugin(id = "perms-tester")
-@Singleton
 class AuthQuery {
 
   @Command(aliases = Array("permissions:test", "testperm"), desc = "Test a permission")

@@ -35,7 +35,6 @@ import com.sk89q.intake.{Command, Require}
 import org.slf4j.{Logger, LoggerFactory}
 
 @Plugin(id = "alias")
-@Singleton
 class AliasManager @Inject() (config: ConfigFile, eventBus: EventBus) {
 
   val log: Logger = LoggerFactory.getLogger(classOf[AliasManager])

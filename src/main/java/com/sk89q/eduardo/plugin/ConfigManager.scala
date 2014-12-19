@@ -27,7 +27,6 @@ import com.sk89q.eduardo.service.plugin.Plugin
 import com.sk89q.intake.{Command, Require}
 
 @Plugin(id = "config")
-@Singleton
 class ConfigManager @Inject() (eventBus: EventBus) {
 
   @Command(aliases = Array("config:reload", "reload"), desc = "Reload configuration")

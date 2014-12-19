@@ -20,7 +20,6 @@
 package com.sk89q.eduardo.service.persistence;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.sk89q.eduardo.service.plugin.LoaderException;
 import com.sk89q.eduardo.service.plugin.Plugin;
@@ -35,7 +34,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @Plugin(id = "persistence")
-@Singleton
 public class Persistence {
 
     private static final Pattern validId = Pattern.compile("^[A-Za-z_][A-Za-z0-9_]{0,19}$");

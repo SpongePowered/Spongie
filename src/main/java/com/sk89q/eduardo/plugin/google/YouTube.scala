@@ -30,7 +30,6 @@ import com.sk89q.intake.parametric.annotation.Text
 import com.sk89q.intake.{Command, Require}
 
 @Plugin(id = "youtube")
-@Singleton
 class YouTube @Inject() (config: Config) {
 
   val apiKey = config.stringAt("youtube.api-key", "")

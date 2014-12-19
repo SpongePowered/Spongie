@@ -27,7 +27,6 @@ import com.sk89q.intake.Command
 import com.sk89q.intake.context.CommandContext
 
 @Plugin(id = "commands")
-@Singleton
 class Commands @Inject() (eventBus: EventBus) {
 
   @Command(aliases = Array("commands:join", "&"), desc = "Run several commands")

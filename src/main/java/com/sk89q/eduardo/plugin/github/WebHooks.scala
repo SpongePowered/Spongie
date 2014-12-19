@@ -49,7 +49,6 @@ import scala.collection.JavaConversions._
 import scala.util.control.Breaks._
 
 @Plugin(id = "github-webhooks")
-@Singleton
 class WebHooks @Inject() (config: Config, mapper: ObjectMapper,
                                    shortener: URLShortener, broadcast: GenericBroadcast) {
 

@@ -20,25 +20,19 @@
 package com.sk89q.eduardo.plugin.irc;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.sk89q.eduardo.event.StartupEvent;
 import com.sk89q.eduardo.event.message.BroadcastEvent;
 import com.sk89q.eduardo.event.message.MessageEvent;
 import com.sk89q.eduardo.model.context.Context;
 import com.sk89q.eduardo.model.context.Mode;
 import com.sk89q.eduardo.model.response.Response;
-import com.sk89q.eduardo.service.plugin.Plugin;
 import com.sk89q.eduardo.service.event.EventBus;
 import com.sk89q.eduardo.service.event.Subscribe;
+import com.sk89q.eduardo.service.plugin.Plugin;
 import com.sk89q.eduardo.util.config.Config;
 import com.sk89q.eduardo.util.formatting.StyledFragment;
-import org.pircbotx.Channel;
-import org.pircbotx.Configuration;
+import org.pircbotx.*;
 import org.pircbotx.Configuration.Builder;
-import org.pircbotx.MultiBotManager;
-import org.pircbotx.PircBotX;
-import org.pircbotx.User;
-import org.pircbotx.UtilSSLSocketFactory;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.hooks.Listener;
 import org.pircbotx.hooks.events.NoticeEvent;
@@ -47,15 +41,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Plugin(id = "irc")
-@Singleton
 public class PircBotXClient implements Listener<IRCBot> {
 
     private static final Logger log = LoggerFactory.getLogger(PircBotXClient.class);
