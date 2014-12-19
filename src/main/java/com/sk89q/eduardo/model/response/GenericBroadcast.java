@@ -19,10 +19,10 @@
 
 package com.sk89q.eduardo.model.response;
 
-import com.sk89q.eduardo.service.event.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sk89q.eduardo.event.message.BroadcastEvent;
+import com.sk89q.eduardo.service.event.EventBus;
 import com.sk89q.eduardo.util.formatting.StyledFragment;
 
 @Singleton

@@ -19,9 +19,9 @@
 
 package com.sk89q.eduardo.service.command;
 
+import com.sk89q.eduardo.model.context.Context;
 import com.sk89q.eduardo.service.throttle.RateLimit;
 import com.sk89q.eduardo.service.throttle.RateLimiter;
-import com.sk89q.eduardo.model.context.Context;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.SettableDescription;
 import com.sk89q.intake.context.CommandContext;
@@ -59,8 +59,9 @@ public class RateLimitListener implements InvokeListener, InvokeHandler {
     @Override
     public boolean preProcess(Object o, Method method, ParameterData[] data, CommandContext context, CommandLocals locals) throws CommandException, ParameterException {
         RateLimit limit = method.getAnnotation(RateLimit.class);
+        double weight = limit != null ? limit.weight() : 1;
 
-        if (limit != null) {
+        if (weight > 0) {
             Context callerContext = locals.get(Context.class);
             if (callerContext == null) {
                 log.warn("Tried to handle @RateLimit but Subject is not available while handling " + context.getCommand(),
@@ -68,7 +69,7 @@ public class RateLimitListener implements InvokeListener, InvokeHandler {
                 return false;
             }
 
-            if (!limiter.tryConsume(callerContext, limit.weight())) {
+            if (!limiter.tryConsume(callerContext, weight)) {
                 log.info("Command usage was rate limited ({})", callerContext);
                 return false;
             }

@@ -19,7 +19,7 @@
 
 package com.sk89q.eduardo.plugin
 
-import com.google.inject.{Inject, Singleton}
+import com.google.inject.Inject
 import com.sk89q.eduardo.event.ConfigureEvent
 import com.sk89q.eduardo.model.response.Response
 import com.sk89q.eduardo.service.event.EventBus

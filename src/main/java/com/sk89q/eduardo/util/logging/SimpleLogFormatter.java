@@ -21,11 +21,7 @@ package com.sk89q.eduardo.util.logging;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 public final class SimpleLogFormatter extends Formatter {
 

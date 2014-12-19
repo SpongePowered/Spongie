@@ -24,10 +24,10 @@ import java.io.File
 import com.beust.jcommander.JCommander
 import com.google.inject.{Guice, Inject, Injector, Singleton}
 import com.sk89q.eduardo.event.{ConfigureEvent, StartupEvent}
-import com.sk89q.eduardo.service.plugin.{LoadablePlugin, LoaderException, PluginLoader}
 import com.sk89q.eduardo.service.command.CommandManager
 import com.sk89q.eduardo.service.event.EventBus
-import com.sk89q.eduardo.util.config.{YamlConfig, ConfigFile}
+import com.sk89q.eduardo.service.plugin.{LoadablePlugin, LoaderException, PluginLoader}
+import com.sk89q.eduardo.util.config.{ConfigFile, YamlConfig}
 import com.sk89q.eduardo.util.logging.SimpleLogFormatter
 import org.slf4j.LoggerFactory
 

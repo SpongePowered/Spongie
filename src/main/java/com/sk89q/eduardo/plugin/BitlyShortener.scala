@@ -21,7 +21,7 @@ package com.sk89q.eduardo.plugin
 
 import java.net.{MalformedURLException, URL}
 
-import com.google.inject.{Inject, Singleton}
+import com.google.inject.Inject
 import com.rosaloves.bitlyj.Bitly.Provider
 import com.rosaloves.bitlyj.{Bitly, BitlyException, ShortenedUrl}
 import com.sk89q.eduardo.event.ConfigureEvent
