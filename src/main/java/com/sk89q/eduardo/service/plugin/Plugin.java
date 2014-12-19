@@ -33,4 +33,6 @@ public @interface Plugin {
 
     String id();
 
+    Class<?>[] provides() default {};
+
 }

@@ -48,12 +48,12 @@ class PluginLoader(config: Config) {
 
             // Identify services
             val services = ListBuffer[Class[_]]()
-            val provides = pluginClass.getAnnotation(classOf[Provides])
-            if (provides != null) {
-              for (serviceClass <- provides.value()) {
+            val plugin = pluginClass.getAnnotation(classOf[Plugin])
+            if (plugin != null) {
+              for (serviceClass <- plugin.provides()) {
                 if (provided.contains(serviceClass)) {
                   throw new LoaderException(s"Cannot register the plugin '$id' for " +
-                    s"service '${serviceClass.getName()}' because it has already been registered")
+                    s"service '${serviceClass.getName}' because it has already been registered")
                 } else {
                   services += serviceClass
                   provided += serviceClass
@@ -68,8 +68,8 @@ class PluginLoader(config: Config) {
           }
 
         case None =>
-          throw new LoaderException(s"Can't find the plugin '$id'\n\n " +
-            s"These are the known plugins: " + mapping.mkString(", "))
+          throw new LoaderException(s"Can't find the plugin '$id'\n\n" +
+            s"These are the known plugins:\n" + mapping.map(e => s"\t${e._1} (${e._2})").mkString(",\n") + "\n")
       }
     }
 

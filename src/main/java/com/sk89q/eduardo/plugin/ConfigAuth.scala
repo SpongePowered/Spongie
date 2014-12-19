@@ -25,14 +25,13 @@ import com.sk89q.eduardo.model.context.{Context, Mode}
 import com.sk89q.eduardo.service.auth.policy.{MultiMapPolicy, Policy}
 import com.sk89q.eduardo.service.auth.{AuthService, ContextMatch, Subject}
 import com.sk89q.eduardo.service.event.Subscribe
-import com.sk89q.eduardo.service.plugin.{Plugin, Provides}
+import com.sk89q.eduardo.service.plugin.Plugin
 import com.sk89q.eduardo.util.config.Config
 
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 
-@Plugin(id = "config-auth")
-@Provides(Array(classOf[AuthService]))
+@Plugin(id = "config-auth", provides = Array(classOf[AuthService]))
 class ConfigAuth @Inject() (config: Config) extends AuthService {
 
   var policy: Policy[Context] = new MultiMapPolicy[Context]
