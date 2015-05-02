@@ -38,8 +38,8 @@ import com.sk89q.eduardo.service.plugin.Plugin
 import com.sk89q.eduardo.service.shortener.URLShortener
 import com.sk89q.eduardo.util.GitUtils.{shortenHash, shortenMessage, shortenRef}
 import com.sk89q.eduardo.util.config.{Config, ConfigObject}
-import com.sk89q.eduardo.util.formatting.Message
-import com.sk89q.eduardo.util.formatting.Message.{bold, styled}
+import com.sk89q.eduardo.util.formatting.{Style, Message}
+import com.sk89q.eduardo.util.formatting.Message.{style, styled}
 import com.sk89q.eduardo.util.text.English.plural
 import org.apache.commons.codec.binary.Hex
 import org.slf4j.{Logger, LoggerFactory}
@@ -131,9 +131,11 @@ class WebHooks @Inject() (config: Config, mapper: ObjectMapper,
     broadcast(
       event.repository.fullName,
       styled() +
-      s"[${event.repository.name}] $pusher pushed " +
-      bold(event.commits.size) +
-      s" commit${plural(event.commits.size)} to ${shortenRef(event.ref)}: $url")
+        "[" + style(Style.BOLD, style(Style.DARK_GREEN, s"${event.repository.name}")) + "] " +
+        s"$pusher pushed " +
+        style(Style.BOLD, event.commits.size) +
+        s" commit${plural(event.commits.size)} to ${shortenRef(event.ref)}: $url")
+
 
     for ((commit, i) <- event.commits.zipWithIndex) {
       if (i >= 5) {
@@ -141,7 +143,7 @@ class WebHooks @Inject() (config: Config, mapper: ObjectMapper,
         break()
       } else {
         broadcast(event.repository.fullName,
-          bold(s"${event.repository.name}/${shortenRef(event.ref)}") +
+          style(Style.BOLD, s"${event.repository.name}/${shortenRef(event.ref)}") +
             s" ${shortenHash(commit.id)}: ${shortenMessage(commit.message)} (by ${mangleName(commit.author.name)})")
       }
     }
@@ -157,7 +159,7 @@ class WebHooks @Inject() (config: Config, mapper: ObjectMapper,
       event.repository.fullName,
       styled() +
         s"[${event.repository.name}] $sender ${event.action} PR #" +
-        bold(event.number) +
+        style(Style.BOLD, event.number) +
         s": ${event.pullRequest.title} ($url)")
   }
 

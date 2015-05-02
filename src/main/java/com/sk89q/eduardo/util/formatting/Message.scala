@@ -25,10 +25,9 @@ object Message {
     new Message()
   }
 
-  def bold(content: Any): Message = {
-    new Message(Style.BOLD).append(content)
+  def style(style: Style, content: Any): Message = {
+    new Message(style).append(content)
   }
-
 }
 
 class Message(styles: Style*) extends StyledFragment(styles.toArray:_*) {
