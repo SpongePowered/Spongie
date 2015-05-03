@@ -35,3 +35,4 @@ case class PullRequestEvent(action: String, number: Int,
                             @JsonProperty("pull_request") pullRequest: PullRequest,
                             repository: Repository,
                             sender: User)
+case class DeleteEvent(ref: String, ref_type: String, repository: Repository, html_url: URL, description: String)
