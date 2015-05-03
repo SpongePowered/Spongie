@@ -154,7 +154,7 @@ class WebHooks @Inject()(config: Config, mapper: ObjectMapper,
     log.info(s"Got GitHub pull request event for ${event.repository.fullName}")
 
     val sender = mangleName(event.sender.login)
-    val url = shortener.shorten(event.pullRequest.url)
+    val url = shortener.shorten(event.pullRequest.html_url)
     val repoName = styled() + "[" + style(Style.BOLD, style(Style.DARK_GREEN, s"${event.repository.name}")) + "]"
 
     broadcast(

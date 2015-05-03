@@ -28,7 +28,7 @@ case class User(login: String, url: URL)
 case class Commit(id: String, message: String, url: String, author: Identity, committer: Identity,
                   added: List[String], removed: List[String], modified: List[String])
 case class Repository(name: String, @JsonProperty("full_name") fullName: String, owner: Identity)
-case class PullRequest(url: URL, id: Int, title: String, body: String, user: User)
+case class PullRequest(html_url: URL, id: Int, title: String, body: String, user: User)
 
 case class PushEvent(ref: String, compare: URL, commits: List[Commit], repository: Repository, pusher: Identity)
 case class PullRequestEvent(action: String, number: Int,
