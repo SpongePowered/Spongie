@@ -20,6 +20,7 @@
 package com.sk89q.eduardo.plugin.github
 
 import java.io.IOException
+import java.util.function.Supplier
 import java.util.regex.{Matcher, Pattern}
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
@@ -38,8 +39,8 @@ import com.sk89q.eduardo.service.plugin.Plugin
 import com.sk89q.eduardo.service.shortener.URLShortener
 import com.sk89q.eduardo.util.GitUtils.{shortenHash, shortenMessage, shortenRef}
 import com.sk89q.eduardo.util.config.{Config, ConfigObject}
-import com.sk89q.eduardo.util.formatting.{Style, Message}
 import com.sk89q.eduardo.util.formatting.Message.{style, styled}
+import com.sk89q.eduardo.util.formatting.{Message, Style}
 import com.sk89q.eduardo.util.text.English.plural
 import org.apache.commons.codec.binary.Hex
 import org.slf4j.{Logger, LoggerFactory}
@@ -50,9 +51,10 @@ import scala.util.control.Breaks._
 
 @Plugin(id = "github-webhooks")
 @Singleton
-class WebHooks @Inject() (config: Config, mapper: ObjectMapper,
-                                   shortener: URLShortener, broadcast: GenericBroadcast) {
+class WebHooks @Inject()(config: Config, mapper: ObjectMapper,
+                         shortener: URLShortener, broadcast: GenericBroadcast) {
 
+  val maxCommitsToAnnounce: Supplier[Integer] = config.intAt("github-webhook.max-commits-to-announce", 5)
   val sigPattern: Pattern = Pattern.compile("^([^=]+)=(.+)$")
   val hmacSha1: String = "HmacSHA1"
 
@@ -128,17 +130,16 @@ class WebHooks @Inject() (config: Config, mapper: ObjectMapper,
     val pusher = mangleName(event.pusher.name)
     val url = shortener.shorten(event.compare)
 
+    val repoName = styled() + "[" + style(Style.BOLD, style(Style.DARK_GREEN, s"${event.repository.name}")) + "]"
+
     broadcast(
       event.repository.fullName,
       styled() +
-        "[" + style(Style.BOLD, style(Style.DARK_GREEN, s"${event.repository.name}")) + "] " +
-        s"$pusher pushed " +
-        style(Style.BOLD, event.commits.size) +
-        s" commit${plural(event.commits.size)} to ${shortenRef(event.ref)}: $url")
+        repoName + " " + s"$pusher pushed " + style(Style.BOLD, event.commits.size) + s" commit${plural(event.commits.size)} to ${shortenRef(event.ref)}: $url")
 
 
     for ((commit, i) <- event.commits.zipWithIndex) {
-      if (i >= 5) {
+      if (i >= maxCommitsToAnnounce.get()) {
         broadcast(event.repository.fullName, styled() + s"(for more, visit $url)")
         break()
       } else {
@@ -154,16 +155,19 @@ class WebHooks @Inject() (config: Config, mapper: ObjectMapper,
 
     val sender = mangleName(event.sender.login)
     val url = shortener.shorten(event.pullRequest.url)
+    val repoName = styled() + "[" + style(Style.BOLD, style(Style.DARK_GREEN, s"${event.repository.name}")) + "]"
 
     broadcast(
       event.repository.fullName,
       styled() +
-        s"[${event.repository.name}] $sender ${event.action} PR #" +
+        repoName + " " + s"$sender ${event.action} PR #" +
         style(Style.BOLD, event.number) +
         s": ${event.pullRequest.title} ($url)")
   }
 
   private def broadcast(project: String, message: Message) {
-    targets.get(project.toLowerCase).map(t => { broadcast.broadcast(t, message) })
+    targets.get(project.toLowerCase).map(t => {
+      broadcast.broadcast(t, message)
+    })
   }
 }
