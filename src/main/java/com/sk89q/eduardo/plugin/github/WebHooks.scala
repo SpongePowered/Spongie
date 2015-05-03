@@ -120,6 +120,7 @@ class WebHooks @Inject()(config: Config, mapper: ObjectMapper,
     event match {
       case "push" => handlePush(mapper.readValue(data, classOf[PushEvent]))
       case "pull_request" => handlePullRequest(mapper.readValue(data, classOf[PullRequestEvent]))
+      case "delete" => handleDelete(mapper.readValue(data, classOf[DeleteEvent]))
       case _ =>
     }
   }
@@ -127,9 +128,12 @@ class WebHooks @Inject()(config: Config, mapper: ObjectMapper,
   def handlePush(event: PushEvent) {
     log.info(s"Got GitHub push event for ${event.repository.fullName}")
 
+    if (event.commits.size == 0) {
+      return
+    }
+
     val pusher = mangleName(event.pusher.name)
     val url = shortener.shorten(event.compare)
-
     val repoName = styled() + "[" + style(Style.BOLD, style(Style.DARK_GREEN, s"${event.repository.name}")) + "]"
 
     broadcast(
@@ -163,6 +167,11 @@ class WebHooks @Inject()(config: Config, mapper: ObjectMapper,
         repoName + " " + s"$sender ${event.action} PR #" +
         style(Style.BOLD, event.number) +
         s": ${event.pullRequest.title} ($url)")
+  }
+
+  def handleDelete(event: DeleteEvent) = {
+    log.info(s"Got Github delete branch event for ${event.repository.fullName}")
+    log.info(event.toString)
   }
 
   private def broadcast(project: String, message: Message) {
