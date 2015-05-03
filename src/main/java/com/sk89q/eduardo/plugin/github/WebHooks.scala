@@ -120,6 +120,7 @@ class WebHooks @Inject()(config: Config, mapper: ObjectMapper,
     event match {
       case "push" => handlePush(mapper.readValue(data, classOf[PushEvent]))
       case "pull_request" => handlePullRequest(mapper.readValue(data, classOf[PullRequestEvent]))
+      case "create" => handleCreate(mapper.readValue(data, classOf[CreateEvent]))
       case "delete" => handleDelete(mapper.readValue(data, classOf[DeleteEvent]))
       case _ =>
     }
@@ -154,7 +155,7 @@ class WebHooks @Inject()(config: Config, mapper: ObjectMapper,
     }
   }
 
-  def handlePullRequest(event: PullRequestEvent) = {
+  def handlePullRequest(event: PullRequestEvent) {
     log.info(s"Got GitHub pull request event for ${event.repository.fullName}")
 
     val sender = mangleName(event.sender.login)
@@ -169,9 +170,32 @@ class WebHooks @Inject()(config: Config, mapper: ObjectMapper,
         s": ${event.pullRequest.title} ($url)")
   }
 
-  def handleDelete(event: DeleteEvent) = {
-    log.info(s"Got Github delete branch event for ${event.repository.fullName}")
-    log.info(event.toString)
+  def handleDelete(event: DeleteEvent) {
+    log.info(s"Got Github delete event for ${event.repository.fullName}")
+    if (event.ref_type != "branch") {
+      return
+    }
+
+    val repoName = styled() + "[" + style(Style.BOLD, style(Style.DARK_GREEN, s"${event.repository.name}")) + "]"
+    val sender = mangleName(event.sender.login)
+    val url = shortener.shorten(event.repository.html_url)
+
+    broadcast(event.repository.fullName, styled() + repoName + " " + s"$sender deleted branch " +
+      style(Style.BOLD, event.ref))
+  }
+
+  def handleCreate(event: CreateEvent) {
+    log.info(s"Got Github create event for ${event.repository.fullName}")
+    if (event.ref_type == "tag") {
+      return
+    }
+
+    val repoName = styled() + "[" + style(Style.BOLD, style(Style.DARK_GREEN, s"${event.repository.name}")) + "]"
+    val sender = mangleName(event.sender.login)
+    val url = shortener.shorten(event.repository.html_url)
+
+    broadcast(event.repository.fullName, styled() + repoName + " " + s"$sender created ${event.ref_type} " +
+      style(Style.BOLD, event.ref))
   }
 
   private def broadcast(project: String, message: Message) {

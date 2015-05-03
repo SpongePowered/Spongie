@@ -27,7 +27,7 @@ case class Identity(name: String, email: String, username: String)
 case class User(login: String, url: URL)
 case class Commit(id: String, message: String, url: String, author: Identity, committer: Identity,
                   added: List[String], removed: List[String], modified: List[String])
-case class Repository(name: String, @JsonProperty("full_name") fullName: String, owner: Identity)
+case class Repository(name: String, @JsonProperty("full_name") fullName: String, html_url: URL, owner: Identity)
 case class PullRequest(html_url: URL, id: Int, title: String, body: String, user: User)
 
 case class PushEvent(ref: String, compare: URL, commits: List[Commit], repository: Repository, pusher: Identity)
@@ -35,4 +35,5 @@ case class PullRequestEvent(action: String, number: Int,
                             @JsonProperty("pull_request") pullRequest: PullRequest,
                             repository: Repository,
                             sender: User)
-case class DeleteEvent(ref: String, ref_type: String, repository: Repository, html_url: URL, description: String)
+case class CreateEvent(ref: String, ref_type: String, repository: Repository, sender: User)
+case class DeleteEvent(ref: String, ref_type: String, repository: Repository, sender: User)
