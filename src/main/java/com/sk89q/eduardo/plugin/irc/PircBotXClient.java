@@ -19,6 +19,7 @@
 
 package com.sk89q.eduardo.plugin.irc;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.sk89q.eduardo.event.StartupEvent;
 import com.sk89q.eduardo.event.message.BroadcastEvent;
@@ -80,6 +81,8 @@ public class PircBotXClient implements Listener<IRCBot> {
             if (server.getBoolean("ssl", false)) {
                 builder.setSocketFactory(new UtilSSLSocketFactory().trustAllCertificates());
             }
+
+            builder.setNickservPassword(Strings.emptyToNull(server.getString("nickserv.password", "")));
 
             for (String channel : server.getList("auto-join", String.class)) {
                 log.info("Auto-joining channel {}", channel);
