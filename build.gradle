@@ -5,12 +5,15 @@ buildscript {
     }
 }
 
+defaultTasks 'clean', 'build'
+
 apply plugin: 'java'
 apply plugin: 'scala'
+apply plugin: 'eclipse'
 apply plugin: 'maven'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-group = 'com.sk89q'
+archivesBaseName = 'spongie'
 version = '1.1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -34,7 +37,7 @@ jar {
 }
 
 dependencies {
-    compile 'org.scala-lang:scala-library:2.11.4'
+    compile 'org.scala-lang:scala-library:2.11.6'
 
     // Basic libraries
     compile 'org.slf4j:slf4j-jdk14:1.7.7'
