@@ -36,7 +36,6 @@ import com.sk89q.eduardo.model.response.GenericBroadcast
 import com.sk89q.eduardo.service.event.Subscribe
 import com.sk89q.eduardo.service.http.status.{BadRequestError, InternalServerError}
 import com.sk89q.eduardo.service.plugin.Plugin
-import com.sk89q.eduardo.service.shortener.URLShortener
 import com.sk89q.eduardo.util.GitUtils.{shortenHash, shortenMessage, shortenRef}
 import com.sk89q.eduardo.util.config.{Config, ConfigObject}
 import com.sk89q.eduardo.util.formatting.Message.{style, styled}
@@ -51,8 +50,7 @@ import scala.util.control.Breaks._
 
 @Plugin(id = "github-webhooks")
 class WebHooks @Inject() (config: Config, mapper: ObjectMapper,
-                                   shortener: URLShortener, broadcast: GenericBroadcast) {
-
+                                   shortener: Shortener, broadcast: GenericBroadcast) {
   val maxCommitsToAnnounce: Supplier[Integer] = config.intAt("github-webhook.max-commits-to-announce", 5)
   val sigPattern: Pattern = Pattern.compile("^([^=]+)=(.+)$")
   val hmacSha1: String = "HmacSHA1"

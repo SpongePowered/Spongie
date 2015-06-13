@@ -73,6 +73,7 @@ dependencies {
 
     // Modules
     compile 'com.rosaloves:bitlyj:2.0.0'
+    compile 'com.github.kevinsawicki:http-request:6.0'
 
     // Tests
     testCompile('junit:junit:4.11') {
