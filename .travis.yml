@@ -1,0 +1,11 @@
+sudo: false
+
+language: scala
+scala: 2.11.6
+jdk: oraclejdk8
+
+env: GRADLE_OPTS="-Xms1g -Xmx3g"
+script: ./gradlew build
+
+notifications:
+  email: false
