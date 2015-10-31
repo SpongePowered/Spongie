@@ -23,7 +23,7 @@ import java.net.URLEncoder
 
 import com.sk89q.eduardo.model.response.Response
 import com.sk89q.eduardo.service.plugin.Plugin
-import com.sk89q.eduardo.util.{APIException, IdUtil}
+import com.sk89q.eduardo.util.APIException
 import com.sk89q.eduardo.util.http.Requests
 import com.sk89q.intake.{Command, Require}
 import org.apache.http.HttpStatus
@@ -35,7 +35,7 @@ class ProfileLookup {
   @Require(Array("minecraft.uuid"))
   def uuidCommand(response: Response, name: String) = {
     getIdentity(name) match {
-      case Some(identity) => response.respond(s"${identity.name} -> " + IdUtil.dashify(identity.id))
+      case Some(identity) => response.respond(s"${identity.name} -> ${identity.idWithDashes}")
       case None => response.respond(s"Couldn't find '$name'")
     }
   }

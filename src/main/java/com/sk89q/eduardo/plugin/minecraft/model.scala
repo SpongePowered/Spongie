@@ -19,4 +19,13 @@
 
 package com.sk89q.eduardo.plugin.minecraft
 
-case class Identity(id: String, name: String)
+case class Identity(id: String, name: String) {
+
+  lazy val idWithDashes =
+    id.replace("-", "")
+      .patch(8, "-", 0)
+      .patch(13, "-", 0)
+      .patch(18, "-", 0)
+      .patch(23, "-", 0)
+
+}
