@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 @Plugin(id = "github-shortener")
 class Shortener extends URLShortener {
 
-  final val targetUrl = "http://git.io"
+  final val targetUrl = "https://git.io"
   val log = LoggerFactory.getLogger(classOf[Shortener])
 
   def shorten(url: URL) : URL = {
