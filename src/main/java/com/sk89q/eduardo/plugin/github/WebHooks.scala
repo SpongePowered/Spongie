@@ -137,12 +137,13 @@ class WebHooks @Inject() (config: Config, mapper: ObjectMapper,
     broadcast(
       event.repository.fullName,
       styled() +
-        repoName + " " + s"$pusher pushed " + style(Style.BOLD, event.commits.size) + s" commit${plural(event.commits.size)} to ${shortenRef(event.ref)}: $url")
+        repoName + " " + s"$pusher pushed " + style(Style.BOLD, event.commits.size) + s" commit${plural(event.commits.size)} to ${shortenRef(event
+        .ref)} <$url>")
 
 
     for ((commit, i) <- event.commits.zipWithIndex) {
       if (i >= maxCommitsToAnnounce.get()) {
-        broadcast(event.repository.fullName, styled() + s"(for more, visit $url)")
+        broadcast(event.repository.fullName, styled() + s"...for more, visit: $url")
         break()
       } else {
         broadcast(event.repository.fullName,
@@ -164,7 +165,7 @@ class WebHooks @Inject() (config: Config, mapper: ObjectMapper,
       styled() +
         repoName + " " + s"$sender ${event.action} PR #" +
         style(Style.BOLD, event.number) +
-        s": ${event.pullRequest.title} ($url)")
+        s": ${event.pullRequest.title} <$url>")
   }
 
   def handleDelete(event: DeleteEvent) {
