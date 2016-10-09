@@ -160,6 +160,11 @@ class WebHooks @Inject() (config: Config, mapper: ObjectMapper,
     val url = shortener.shorten(event.pullRequest.html_url)
     val repoName = styled() + "[" + style(Style.BOLD, style(Style.DARK_GREEN, s"${event.repository.name}")) + "]"
 
+    val action = event.action;
+    if (!(action.equalsIgnoreCase("opened") || action.equalsIgnoreCase("closed") || action.equalsIgnoreCase("reopened"))) {
+      return
+    }
+
     broadcast(
       event.repository.fullName,
       styled() +
